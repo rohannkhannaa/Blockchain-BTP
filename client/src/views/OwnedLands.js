@@ -56,8 +56,8 @@ class OwnedLands extends Component {
     }
   }
 
-  viewImage = (landId) => {
-    alert(landId);
+  viewImage = (rfpssId) => {
+    alert(rfpssId);
     this.props.history.push({
         pathname: '/viewImage',
       })
@@ -89,11 +89,11 @@ class OwnedLands extends Component {
       verified = await this.state.LandInstance.methods.isVerified(currentAddress).call();
       console.log(verified);
       this.setState({ verified: verified });
-      var registered = await this.state.LandInstance.methods.isBuyer(currentAddress).call();
+      var registered = await this.state.LandInstance.methods.isShq(currentAddress).call();
       console.log(registered);
       this.setState({ registered: registered });
 
-      var count = await this.state.LandInstance.methods.getLandsCount().call();
+      var count = await this.state.LandInstance.methods.getRfpCount().call();
       count = parseInt(count);
       console.log(typeof (count));
       console.log(count);

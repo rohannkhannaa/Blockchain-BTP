@@ -87,14 +87,14 @@ class ApproveRequest extends Component {
 
             const currentAddress = await web3.currentProvider.selectedAddress;
             console.log(currentAddress);
-            var registered = await this.state.LandInstance.methods.isSeller(currentAddress).call();
+            var registered = await this.state.LandInstance.methods.isAgency(currentAddress).call();
             console.log(registered);
             this.setState({ registered: registered });
-            var requestsCount = await this.state.LandInstance.methods.getRequestsCount().call();
+            var requestsCount = await this.state.LandInstance.methods.getBidCount().call();
             console.log(requestsCount);
             
             for (let i = 1; i < requestsCount + 1; i++) {
-                var request = await this.state.LandInstance.methods.getRequestDetails(i).call();
+                var request = await this.state.LandInstance.methods.getBidDetails(i).call();
                 var approved = await this.state.LandInstance.methods.isApproved(i).call();
                 console.log(approved);
                 if (currentAddress == request[0].toLowerCase()) {

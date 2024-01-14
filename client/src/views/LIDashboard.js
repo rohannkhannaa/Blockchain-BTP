@@ -76,12 +76,12 @@ class LIDashboard extends Component {
 
             this.setState({ LandInstance: instance, web3: web3, account: accounts[0] });
 
-            var verified = await this.state.LandInstance.methods.isLandInspector(currentAddress).call();
+            var verified = await this.state.LandInstance.methods.isAdmin(currentAddress).call();
             this.setState({ verified: verified });
 
-            sellerarr.push(<ContractData contract="Land" method="getSellersCount" />);
-            buyerarr.push(<ContractData contract="Land" method="getBuyersCount" />);
-            reqsarr.push(<ContractData contract="Land" method="getRequestsCount" />);
+            sellerarr.push(<ContractData contract="Land" method="getShqCount" />);
+            buyerarr.push(<ContractData contract="Land" method="getAgencyCount" />);
+            reqsarr.push(<ContractData contract="Land" method="getBidCount" />);
 
 
         } catch (error) {

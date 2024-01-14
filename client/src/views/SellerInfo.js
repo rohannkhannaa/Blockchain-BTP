@@ -52,11 +52,11 @@ class SellerInfo extends Component {
         }
     }
 
-    verifySeller = (item) => async () => {
+    verifyShq = (item) => async () => {
         //console.log("Hello");
         //console.log(item);
 
-        await this.state.LandInstance.methods.verifySeller(
+        await this.state.LandInstance.methods.verifyShq(
             item
         ).send({
             from: this.state.account,
@@ -70,7 +70,7 @@ class SellerInfo extends Component {
 
     NotverifySeller = (item) => async() => {
 
-        await this.state.LandInstance.methods.rejectSeller(
+        await this.state.LandInstance.methods.rejectShq(
             item
         ).send({
             from: this.state.account,
@@ -105,20 +105,20 @@ class SellerInfo extends Component {
             this.setState({ LandInstance: instance, web3: web3, account: accounts[0] });
 
 
-            sellersCount = await this.state.LandInstance.methods.getSellersCount().call();
+            sellersCount = await this.state.LandInstance.methods.getShqCount().call();
             console.log(sellersCount);
 
             
             
-            sellersMap = await this.state.LandInstance.methods.getSeller().call();
+            sellersMap = await this.state.LandInstance.methods.getShq().call();
             
-            var verified = await this.state.LandInstance.methods.isLandInspector(currentAddress).call();
+            var verified = await this.state.LandInstance.methods.isAdmin(currentAddress).call();
             //console.log(verified);
             this.setState({ verified: verified });
 
 
             for (let i = 0; i < sellersCount; i++) {
-                var seller = await this.state.LandInstance.methods.getSellerDetails(sellersMap[i]).call();
+                var seller = await this.state.LandInstance.methods.getShqDetails(sellersMap[i]).call();
                 console.log(seller);
                 var seller_verify = await this.state.LandInstance.methods.isVerified(sellersMap[i]).call();
                 console.log(seller_verify);
@@ -133,7 +133,7 @@ class SellerInfo extends Component {
                 sellerTable.push(<tr><td>{i + 1}</td><td>{sellersMap[i]}</td><td>{seller[0]}</td><td>{seller[1]}</td><td>{seller[2]}</td><td>{seller[3]}</td>
                     <td>{seller.verified.toString()==='true'?('Verified'):('Rejected')}</td>
                     <td>
-                        <Button onClick={this.verifySeller(sellersMap[i])} disabled={seller_verify || not_verify} className="button-vote">
+                        <Button onClick={this.verifyShq(sellersMap[i])} disabled={seller_verify || not_verify} className="button-vote">
                             Verify
                     </Button>
                     </td>

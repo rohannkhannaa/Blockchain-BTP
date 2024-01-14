@@ -88,7 +88,7 @@ class sellerProfile extends Component {
               verification.push(<p id = "unknown">Not Yet Verified <i class="fas fa-user-cog"></i></p>);
             }
 
-            seller = await this.state.LandInstance.methods.getSellerDetails(currentAddress).call();
+            seller = await this.state.LandInstance.methods.getShqDetails(currentAddress).call();
             console.log(seller);
             console.log(seller[0]);
 
@@ -203,7 +203,7 @@ class sellerProfile extends Component {
                                     <CardBody>
                                         <Form>
                                             {sellerTable}
-                                            <Button href="/Seller/updateSeller"  className="btn-fill" disabled={!this.state.verified} color="primary">
+                                            <Button href="/Seller/updateShq"  className="btn-fill" disabled={!this.state.verified} color="primary">
                                             Edit Profile
                                       </Button>
                                         </Form>

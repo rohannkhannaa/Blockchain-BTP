@@ -84,7 +84,7 @@ class buyerProfile extends Component {
               verification.push(<p id = "unknown">Not Yet Verified <i class="fas fa-user-cog"></i></p>);
             }
 
-            buyer = await this.state.LandInstance.methods.getBuyerDetails(currentAddress).call();
+            buyer = await this.state.LandInstance.methods.getAgencyDetails(currentAddress).call();
             console.log(buyer);
             console.log(buyer[0]);
 
@@ -224,7 +224,7 @@ class buyerProfile extends Component {
                                         <Form>
                                             {buyerTable}
                                         </Form>
-                                        <Button href="/admin/updateBuyer"  className="btn-fill btn-dark" disabled={!this.state.verified} color="primary">
+                                        <Button href="/admin/updateAgency"  className="btn-fill btn-dark" disabled={!this.state.verified} color="primary">
                                             Edit Profile
                                       </Button>
                                     </CardBody>

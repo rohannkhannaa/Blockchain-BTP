@@ -1,19 +1,19 @@
 pragma solidity >= 0.5.2;
 pragma experimental ABIEncoderV2;
-contract Land {
-    struct Landreg {
+contract Land { // RFP
+    struct RfpReg { // RfpReg
         uint id;
         uint area;
         string city;
         string state;
-        uint landPrice;
-        uint propertyPID;
+        uint rfpPrice;
+        uint rfpssId;
         uint physicalSurveyNumber;
         string ipfsHash;
         string document;
     }
 
-    struct Buyer{
+    struct DevAgency{ //DevAgency
         address id;
         string name;
         uint age;
@@ -24,296 +24,321 @@ contract Land {
         string email;
     }
 
-    struct Seller{
+    struct Shq{ // Shq
         address id;
         string name;
         uint age;
         string aadharNumber;
         string panNumber;
-        string landsOwned;
+        string rfpssOwned;
         string document;
     }
 
-    struct LandInspector {
+    struct ContractAdmin { // Admin
         uint id;
         string name;
         uint age;
         string designation;
     }
 
-    struct LandRequest{
+    struct BidRequest{ //BidRequest
         uint reqId;
-        address sellerId;
-        address buyerId;
-        uint landId;
+        address shqqId;
+        address agencyyId;
+        uint rfpssId;
         // bool requestStatus;
         // bool requested;
     }
 
     //key value pairs
-    mapping(uint => Landreg) public lands;
-    mapping(uint => LandInspector) public InspectorMapping;
-    mapping(address => Seller) public SellerMapping;
-    mapping(address => Buyer) public BuyerMapping;
-    mapping(uint => LandRequest) public RequestsMapping;
+    mapping(uint => RfpReg) public rfps;
+    mapping(uint => ContractAdmin) public AdminMapping;
+    mapping(address => Shq) public ShqMapping;
+    mapping(address => DevAgency) public AgencyMapping;
+    mapping(uint => BidRequest) public BidsMapping;
 
     mapping(address => bool) public RegisteredAddressMapping;
-    mapping(address => bool) public RegisteredSellerMapping;
-    mapping(address => bool) public RegisteredBuyerMapping;
-    mapping(address => bool) public SellerVerification;
-    mapping(address => bool) public SellerRejection;
-    mapping(address => bool) public BuyerVerification;
-    mapping(address => bool) public BuyerRejection;
-    mapping(uint => bool) public LandVerification;
-    mapping(uint => address) public LandOwner;
+    mapping(address => bool) public RegisteredShqMapping;
+    mapping(address => bool) public RegisteredAgencyMapping;
+    mapping(address => bool) public ShqVerification;
+    mapping(address => bool) public ShqRejection;
+    mapping(address => bool) public AgencyVerification;
+    mapping(address => bool) public AgencyRejection;
+    mapping(uint => bool) public RfpVerification;
+    mapping(uint => address) public RfpOwner;
     mapping(uint => bool) public RequestStatus;
-    mapping(uint => bool) public RequestedLands;
+    mapping(uint => bool) public RequestedRfp;
     mapping(uint => bool) public PaymentReceived;
 
-    address public Land_Inspector;
-    address[] public sellers;
-    address[] public buyers;
+    address public RfpAdmin;
+    address[] public shqList;
+    address[] public agencyList;
 
-    uint public landsCount;
-    uint public inspectorsCount;
-    uint public sellersCount;
-    uint public buyersCount;
+    uint public rfpCount;
+    uint public adminCount;
+    uint public agencyCount;
+    uint public shqCount;
     uint public requestsCount;
 
     event Registration(address _registrationId);
-    event AddingLand(uint indexed _landId);
-    event Landrequested(address _sellerId);
+    event AddingRfp(uint indexed _landId);
+    event Rfprequested(address _sellerId);
     event requestApproved(address _buyerId);
     event Verified(address _id);
     event Rejected(address _id);
 
     constructor() public{
-        Land_Inspector = msg.sender ;
-        addLandInspector("Inspector 1", 45, "Tehsil Manager");
+        RfpAdmin = msg.sender ;
+        addAdmin("Inspector 1", 45, "Tehsil Manager");
     }
 
-    function addLandInspector(string memory _name, uint _age, string memory _designation) private {
-        inspectorsCount++;
-        InspectorMapping[inspectorsCount] = LandInspector(inspectorsCount, _name, _age, _designation);
+    // addAdmin
+    function addAdmin(string memory _name, uint _age, string memory _designation) private {
+        adminCount++;
+        AdminMapping[adminCount] = ContractAdmin(adminCount, _name, _age, _designation);
     }
 
-    function getLandsCount() public view returns (uint) {
-        return landsCount;
+    // getRfpCount
+    function getRfpCount() public view returns (uint) {
+        return rfpCount;
     }
 
-    function getBuyersCount() public view returns (uint) {
-        return buyersCount;
+    // getAgencyCount
+    function getAgencyCount() public view returns (uint) {
+        return shqCount;
     }
 
-    function getSellersCount() public view returns (uint) {
-        return sellersCount;
+    // getShqCount
+    function getShqCount() public view returns (uint) {
+        return agencyCount;
     }
 
-    function getRequestsCount() public view returns (uint) {
+    // getBidCount
+    function getBidCount() public view returns (uint) {
         return requestsCount;
     }
+
     function getArea(uint i) public view returns (uint) {
-        return lands[i].area;
+        return rfps[i].area;
     }
     function getCity(uint i) public view returns (string memory) {
-        return lands[i].city;
+        return rfps[i].city;
     }
      function getState(uint i) public view returns (string memory) {
-        return lands[i].state;
+        return rfps[i].state;
     }
     // function getStatus(uint i) public view returns (bool) {
-    //     return lands[i].verificationStatus;
+    //     return rfps[i].verificationStatus;
     // }
     function getPrice(uint i) public view returns (uint) {
-        return lands[i].landPrice;
+        return rfps[i].rfpPrice;
     }
     function getPID(uint i) public view returns (uint) {
-        return lands[i].propertyPID;
+        return rfps[i].rfpssId;
     }
     function getSurveyNumber(uint i) public view returns (uint) {
-        return lands[i].physicalSurveyNumber;
+        return rfps[i].physicalSurveyNumber;
     }
     function getImage(uint i) public view returns (string memory) {
-        return lands[i].ipfsHash;
+        return rfps[i].ipfsHash;
     }
     function getDocument(uint i) public view returns (string memory) {
-        return lands[i].document;
+        return rfps[i].document;
     }
     
     function getLandOwner(uint id) public view returns (address) {
-        return LandOwner[id];
+        return RfpOwner[id];
     }
 
-    function verifySeller(address _sellerId) public{
-        require(isLandInspector(msg.sender));
+    // verifyShq
+    function verifyShq(address _sellerId) public{
+        require(isAdmin(msg.sender));
 
-        SellerVerification[_sellerId] = true;
+        ShqVerification[_sellerId] = true;
         emit Verified(_sellerId);
     }
+    
+    // rejectShq 
+    function rejectShq(address _sellerId) public{
+        require(isAdmin(msg.sender));
 
-    function rejectSeller(address _sellerId) public{
-        require(isLandInspector(msg.sender));
-
-        SellerRejection[_sellerId] = true;
+        ShqRejection[_sellerId] = true;
         emit Rejected(_sellerId);
     }
 
-    function verifyBuyer(address _buyerId) public{
-        require(isLandInspector(msg.sender));
+    // verifyAgency
+    function verifyAgency(address _buyerId) public{
+        require(isAdmin(msg.sender));
 
-        BuyerVerification[_buyerId] = true;
+        AgencyVerification[_buyerId] = true;
         emit Verified(_buyerId);
     }
+    // rejectAgency
+    function rejectAgency(address _buyerId) public{
+        require(isAdmin(msg.sender));
 
-    function rejectBuyer(address _buyerId) public{
-        require(isLandInspector(msg.sender));
-
-        BuyerRejection[_buyerId] = true;
+        AgencyRejection[_buyerId] = true;
         emit Rejected(_buyerId);
     }
     
-    function verifyLand(uint _landId) public{
-        require(isLandInspector(msg.sender));
+    // verifyRfp
+    function verifyRfp(uint _landId) public{
+        require(isAdmin(msg.sender));
 
-        LandVerification[_landId] = true;
+        RfpVerification[_landId] = true;
     }
 
-    function isLandVerified(uint _id) public view returns (bool) {
-        if(LandVerification[_id]){
+    // isRfpVerified
+    function isRfpVerified(uint _id) public view returns (bool) {
+        if(RfpVerification[_id]){
             return true;
         }
     }
 
+    
     function isVerified(address _id) public view returns (bool) {
-        if(SellerVerification[_id] || BuyerVerification[_id]){
+        if(ShqVerification[_id] || AgencyVerification[_id]){
             return true;
         }
     }
 
     function isRejected(address _id) public view returns (bool) {
-        if(SellerRejection[_id] || BuyerRejection[_id]){
+        if(ShqRejection[_id] || AgencyRejection[_id]){
             return true;
         }
     }
 
-    function isSeller(address _id) public view returns (bool) {
-        if(RegisteredSellerMapping[_id]){
+    // isAgency
+    function isAgency(address _id) public view returns (bool) {
+        if(RegisteredShqMapping[_id]){
             return true;
         }
     }
 
-    function isLandInspector(address _id) public view returns (bool) {
-        if(Land_Inspector == _id){
+    // isAdmin
+    function isAdmin(address _id) public view returns (bool) {
+        if(RfpAdmin == _id){
             return true;
         }else{
             return false;
         }
     }
 
-    function isBuyer(address _id) public view returns (bool) {
-        if(RegisteredBuyerMapping[_id]){
+    // isShq
+    function isShq(address _id) public view returns (bool) {
+        if(RegisteredAgencyMapping[_id]){
             return true;
         }
     }
+
     function isRegistered(address _id) public view returns (bool) {
         if(RegisteredAddressMapping[_id]){
             return true;
         }
     }
 
-    function addLand(uint _area, string memory _city,string memory _state, uint landPrice, uint _propertyPID,uint _surveyNum,string memory _ipfsHash, string memory _document) public {
-        require((isSeller(msg.sender)) && (isVerified(msg.sender)));
-        landsCount++;
-        lands[landsCount] = Landreg(landsCount, _area, _city, _state, landPrice,_propertyPID, _surveyNum, _ipfsHash, _document);
-        LandOwner[landsCount] = msg.sender;
-        // emit AddingLand(landsCount);
+    // addRfp
+    function addRfp(uint _area, string memory _city,string memory _state, uint rfpPrice, uint _propertyPID,uint _surveyNum,string memory _ipfsHash, string memory _document) public {
+        require((isAgency(msg.sender)) && (isVerified(msg.sender)));
+        rfpCount++;
+        rfps[rfpCount] = RfpReg(rfpCount, _area, _city, _state, rfpPrice,_propertyPID, _surveyNum, _ipfsHash, _document);
+        RfpOwner[rfpCount] = msg.sender;
+        // emit AddingRfp(rfpCount);
     }
 
     //registration of seller
-    function registerSeller(string memory _name, uint _age, string memory _aadharNumber, string memory _panNumber, string memory _landsOwned, string memory _document) public {
-        //require that Seller is not already registered
+    // registerShq
+    function registerShq(string memory _name, uint _age, string memory _aadharNumber, string memory _panNumber, string memory _landsOwned, string memory _document) public {
+        //require that Shq is not already registered
         require(!RegisteredAddressMapping[msg.sender]);
 
         RegisteredAddressMapping[msg.sender] = true;
-        RegisteredSellerMapping[msg.sender] = true ;
-        sellersCount++;
-        SellerMapping[msg.sender] = Seller(msg.sender, _name, _age, _aadharNumber,_panNumber, _landsOwned, _document);
-        sellers.push(msg.sender);
+        RegisteredShqMapping[msg.sender] = true ;
+        agencyCount++;
+        ShqMapping[msg.sender] = Shq(msg.sender, _name, _age, _aadharNumber,_panNumber, _landsOwned, _document);
+        shqList.push(msg.sender);
         emit Registration(msg.sender);
     }
 
-    function updateSeller(string memory _name, uint _age, string memory _aadharNumber, string memory _panNumber, string memory _landsOwned) public {
-        //require that Seller is already registered
-        require(RegisteredAddressMapping[msg.sender] && (SellerMapping[msg.sender].id == msg.sender));
+    // updateShq
+    function updateShq(string memory _name, uint _age, string memory _aadharNumber, string memory _panNumber, string memory _landsOwned) public {
+        //require that Shq is already registered
+        require(RegisteredAddressMapping[msg.sender] && (ShqMapping[msg.sender].id == msg.sender));
 
-        SellerMapping[msg.sender].name = _name;
-        SellerMapping[msg.sender].age = _age;
-        SellerMapping[msg.sender].aadharNumber = _aadharNumber;
-        SellerMapping[msg.sender].panNumber = _panNumber;
-        SellerMapping[msg.sender].landsOwned = _landsOwned;
+        ShqMapping[msg.sender].name = _name;
+        ShqMapping[msg.sender].age = _age;
+        ShqMapping[msg.sender].aadharNumber = _aadharNumber;
+        ShqMapping[msg.sender].panNumber = _panNumber;
+        ShqMapping[msg.sender].rfpssOwned = _landsOwned;
 
     }
-
-    function getSeller() public view returns( address [] memory ){
-        return(sellers);
+    // getShq
+    function getShq() public view returns( address [] memory ){
+        return(shqList);
     }
 
-    function getSellerDetails(address i) public view returns (string memory, uint, string memory, string memory, string memory, string memory) {
-        return (SellerMapping[i].name, SellerMapping[i].age, SellerMapping[i].aadharNumber, SellerMapping[i].panNumber, SellerMapping[i].landsOwned, SellerMapping[i].document);
+    // getShqDetails
+    function getShqDetails(address i) public view returns (string memory, uint, string memory, string memory, string memory, string memory) {
+        return (ShqMapping[i].name, ShqMapping[i].age, ShqMapping[i].aadharNumber, ShqMapping[i].panNumber, ShqMapping[i].rfpssOwned, ShqMapping[i].document);
     }
 
-    function registerBuyer(string memory _name, uint _age, string memory _city, string memory _aadharNumber, string memory _panNumber, string memory _document, string memory _email) public {
-        //require that Buyer is not already registered
+    // registerAgency
+    function registerAgency(string memory _name, uint _age, string memory _city, string memory _aadharNumber, string memory _panNumber, string memory _document, string memory _email) public {
+        //require that DevAgency is not already registered
         require(!RegisteredAddressMapping[msg.sender]);
 
         RegisteredAddressMapping[msg.sender] = true;
-        RegisteredBuyerMapping[msg.sender] = true ;
-        buyersCount++;
-        BuyerMapping[msg.sender] = Buyer(msg.sender, _name, _age, _city, _aadharNumber, _panNumber, _document, _email);
-        buyers.push(msg.sender);
+        RegisteredAgencyMapping[msg.sender] = true ;
+        shqCount++;
+        AgencyMapping[msg.sender] = DevAgency(msg.sender, _name, _age, _city, _aadharNumber, _panNumber, _document, _email);
+        agencyList.push(msg.sender);
 
         emit Registration(msg.sender);
     }
 
-    function updateBuyer(string memory _name,uint _age, string memory _city,string memory _aadharNumber, string memory _email, string memory _panNumber) public {
-        //require that Buyer is already registered
-        require(RegisteredAddressMapping[msg.sender] && (BuyerMapping[msg.sender].id == msg.sender));
+    // updateAgency
+    function updateAgency(string memory _name,uint _age, string memory _city,string memory _aadharNumber, string memory _email, string memory _panNumber) public {
+        //require that DevAgency is already registered
+        require(RegisteredAddressMapping[msg.sender] && (AgencyMapping[msg.sender].id == msg.sender));
 
-        BuyerMapping[msg.sender].name = _name;
-        BuyerMapping[msg.sender].age = _age;
-        BuyerMapping[msg.sender].city = _city;
-        BuyerMapping[msg.sender].aadharNumber = _aadharNumber;
-        BuyerMapping[msg.sender].email = _email;
-        BuyerMapping[msg.sender].panNumber = _panNumber;
+        AgencyMapping[msg.sender].name = _name;
+        AgencyMapping[msg.sender].age = _age;
+        AgencyMapping[msg.sender].city = _city;
+        AgencyMapping[msg.sender].aadharNumber = _aadharNumber;
+        AgencyMapping[msg.sender].email = _email;
+        AgencyMapping[msg.sender].panNumber = _panNumber;
         
     }
 
-    function getBuyer() public view returns( address [] memory ){
-        return(buyers);
+    // getAgency
+    function getAgency() public view returns( address [] memory ){
+        return(agencyList);
     }
 
-    function getBuyerDetails(address i) public view returns ( string memory,string memory, string memory, string memory, string memory, uint, string memory) {
-        return (BuyerMapping[i].name,BuyerMapping[i].city , BuyerMapping[i].panNumber, BuyerMapping[i].document, BuyerMapping[i].email, BuyerMapping[i].age, BuyerMapping[i].aadharNumber);
+    // getAgencyDetails
+    function getAgencyDetails(address i) public view returns ( string memory,string memory, string memory, string memory, string memory, uint, string memory) {
+        return (AgencyMapping[i].name,AgencyMapping[i].city , AgencyMapping[i].panNumber, AgencyMapping[i].document, AgencyMapping[i].email, AgencyMapping[i].age, AgencyMapping[i].aadharNumber);
     }
 
-
-    function requestLand(address _sellerId, uint _landId) public{
-        require(isBuyer(msg.sender) && isVerified(msg.sender));
+    // requestBid
+    function requestBid(address _sellerId, uint _landId) public{
+        require(isShq(msg.sender) && isVerified(msg.sender));
         
         requestsCount++;
-        RequestsMapping[requestsCount] = LandRequest(requestsCount, _sellerId, msg.sender, _landId);
+        BidsMapping[requestsCount] = BidRequest(requestsCount, _sellerId, msg.sender, _landId);
         RequestStatus[requestsCount] = false;
-        RequestedLands[requestsCount] = true;
+        RequestedRfp[requestsCount] = true;
 
-        emit Landrequested(_sellerId);
+        emit Rfprequested(_sellerId);
     }
 
-    function getRequestDetails (uint i) public view returns (address, address, uint, bool) {
-        return(RequestsMapping[i].sellerId, RequestsMapping[i].buyerId, RequestsMapping[i].landId, RequestStatus[i]);
+    // getBidDetails
+    function getBidDetails (uint i) public view returns (address, address, uint, bool) {
+        return(BidsMapping[i].shqqId, BidsMapping[i].agencyyId, BidsMapping[i].rfpssId, RequestStatus[i]);
     }
 
     function isRequested(uint _id) public view returns (bool) {
-        if(RequestedLands[_id]){
+        if(RequestedRfp[_id]){
             return true;
         }
     }
@@ -325,16 +350,16 @@ contract Land {
     }
 
     function approveRequest(uint _reqId) public {
-        require((isSeller(msg.sender)) && (isVerified(msg.sender)));
+        require((isAgency(msg.sender)) && (isVerified(msg.sender)));
        
         RequestStatus[_reqId] = true;
 
     }
 
-    function LandOwnershipTransfer(uint _landId, address _newOwner) public{
-        require(isLandInspector(msg.sender));
+    function RfpOwnershipTransfer(uint _landId, address _newOwner) public{
+        require(isAdmin(msg.sender));
 
-        LandOwner[_landId] = _newOwner;
+        RfpOwner[_landId] = _newOwner;
     }
 
     function isPaid(uint _landId) public view returns (bool) {
@@ -347,7 +372,4 @@ contract Land {
         PaymentReceived[_landId] = true;
         _receiver.transfer(msg.value);
     }
-
-
-
 }

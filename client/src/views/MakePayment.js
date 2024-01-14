@@ -96,10 +96,10 @@ class Dashboard extends Component {
 
       const currentAddress = await web3.currentProvider.selectedAddress;
       console.log(currentAddress);
-      var registered = await this.state.LandInstance.methods.isBuyer(currentAddress).call();
+      var registered = await this.state.LandInstance.methods.isShq(currentAddress).call();
       console.log(registered);
       this.setState({ registered: registered });
-      var count = await this.state.LandInstance.methods.getLandsCount().call();
+      var count = await this.state.LandInstance.methods.getRfpCount().call();
       count = parseInt(count);
       console.log(typeof (count));
       console.log(count);

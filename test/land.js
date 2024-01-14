@@ -30,7 +30,7 @@ contract("Land", function(accounts){
     it("allows a seller to register", function() {
         return Land.deployed().then(function(instance) {
             landReginstance = instance;
-            return landReginstance.registerSeller("Vrinda", 20, "abc", "xyz", "many", "QmYdztkcPJLmGmwLmM4nyBfVatoBMRDuUjmgBupjmTodAP", {from: seller});
+            return landReginstance.registerShq("Vrinda", 20, "abc", "xyz", "many", "QmYdztkcPJLmGmwLmM4nyBfVatoBMRDuUjmgBupjmTodAP", {from: seller});
         }).then(function(receipt) {
           assert.equal(receipt.logs.length, 1, "an event was triggered");
           assert.equal(receipt.logs[0].event, "Registration", "the event type is correct");
@@ -43,7 +43,7 @@ contract("Land", function(accounts){
     it("allows a buyer to register", function() {
         return Land.deployed().then(function(instance) {
             landReginstance = instance;
-            return landReginstance.registerBuyer("Vrinda", 20, "akola", "aadhar123456", "pan1234567", "QmYdztkcPJLmGmwLmM4nyBfVatoBMRDuUjmgBupjmTodAP", "vvahuja2000@gmail.com", {from: buyer});
+            return landReginstance.registerAgency("Vrinda", 20, "akola", "aadhar123456", "pan1234567", "QmYdztkcPJLmGmwLmM4nyBfVatoBMRDuUjmgBupjmTodAP", "vvahuja2000@gmail.com", {from: buyer});
         }).then(function(receipt) {
           assert.equal(receipt.logs.length, 1, "an event was triggered");
           assert.equal(receipt.logs[0].event, "Registration", "the event type is correct");
@@ -57,7 +57,7 @@ contract("Land", function(accounts){
     it("allows to verify a seller by Land Inspector", function(){
         return Land.deployed().then(function(instance) {
             landReginstance = instance;
-            return landReginstance.verifySeller(seller, {from: landInspector});
+            return landReginstance.verifyShq(seller, {from: landInspector});
         }).then(function(receipt) {
             assert.equal(receipt.logs.length, 1, "an event was triggered"); 
             assert.equal(receipt.logs[0].event, "Verified", "the event type is correct");
@@ -67,7 +67,7 @@ contract("Land", function(accounts){
     it("allows to verify a Buyer by Land Inspector", function(){
         return Land.deployed().then(function(instance) {
             landReginstance = instance;
-            return landReginstance.verifyBuyer(buyer, {from: landInspector});
+            return landReginstance.verifyAgency(buyer, {from: landInspector});
         }).then(function(receipt) {
             assert.equal(receipt.logs.length, 1, "an event was triggered"); 
             assert.equal(receipt.logs[0].event, "Verified", "the event type is correct");
@@ -77,7 +77,7 @@ contract("Land", function(accounts){
     it("allows to add a Land by a verified Seller", function(){
         return Land.deployed().then(function(instance) {
             landReginstance = instance;
-            return landReginstance.addLand(500,"Akola","Maharashtra", 20000, 567,1890, "QmYdztkcPJLmGmwLmM4nyBfVatoBMRDuUjmgBupjmTodAP","QmYdztkcPJLmGmwLmM4nyBfVatoBMRDuUjmgBupjmTodAP", {from: seller});
+            return landReginstance.addRfp(500,"Akola","Maharashtra", 20000, 567,1890, "QmYdztkcPJLmGmwLmM4nyBfVatoBMRDuUjmgBupjmTodAP","QmYdztkcPJLmGmwLmM4nyBfVatoBMRDuUjmgBupjmTodAP", {from: seller});
         }).then(function(receipt) {
             assert.equal(receipt.logs.length, 0, "Receipt"); 
             return landReginstance.landsCount();
@@ -89,7 +89,7 @@ contract("Land", function(accounts){
     it("allows to request Land by a Verified Buyer", function(){
         return Land.deployed().then(function(instance) {
             landReginstance = instance;
-            return landReginstance.requestLand(seller,1, {from: buyer});
+            return landReginstance.requestBid(seller,1, {from: buyer});
         }).then(function(receipt) {
             assert.equal(receipt.logs.length, 1, "Receipt"); 
             assert.equal(receipt.logs[0].event, "Landrequested", "the event type is correct");
@@ -129,7 +129,7 @@ contract("Land", function(accounts){
     it("Land Ownership transfer from Seller to Buyer", function(){
         return Land.deployed().then(function(instance) {
             landReginstance = instance;
-            return landReginstance.LandOwnershipTransfer(1, buyer, {from: landInspector})
+            return landReginstance.RfpOwnershipTransfer(1, buyer, {from: landInspector})
         }).then(function(receipt) {
             assert.equal(receipt.logs.length, 0, "Receipt");
             return landReginstance.LandOwner(1)
@@ -141,7 +141,7 @@ contract("Land", function(accounts){
     it("allows a registered and verified seller to edit his/her profile", function() {
         return Land.deployed().then(function(instance) {
             landReginstance = instance;
-            return landReginstance.updateSeller("Vrinda Ahuja", 21, "aadhar123456", "pannumber", "ten", {from: seller});
+            return landReginstance.updateShq("Vrinda Ahuja", 21, "aadhar123456", "pannumber", "ten", {from: seller});
         }).then(function(receipt) {
           assert.equal(receipt.logs.length, 0, "Receipt");
           return landReginstance.sellersCount();

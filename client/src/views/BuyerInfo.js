@@ -73,11 +73,11 @@ class BuyerInfo extends Component {
     }
 
   
-    verifyBuyer = (item) => async () => {
+    verifyAgency = (item) => async () => {
         //console.log("Hello");
         //console.log(item);
 
-        await this.state.LandInstance.methods.verifyBuyer(
+        await this.state.LandInstance.methods.verifyAgency(
             item
         ).send({
             from: this.state.account,
@@ -96,7 +96,7 @@ class BuyerInfo extends Component {
 
         await new Promise(resolve => setTimeout(resolve, 10000));
 
-        await this.state.LandInstance.methods.rejectBuyer(
+        await this.state.LandInstance.methods.rejectAgency(
             item
         ).send({
             from: this.state.account,
@@ -131,21 +131,21 @@ class BuyerInfo extends Component {
             this.setState({ LandInstance: instance, web3: web3, account: accounts[0] });
 
 
-            var buyersCount = await this.state.LandInstance.methods.getBuyersCount().call();
+            var buyersCount = await this.state.LandInstance.methods.getAgencyCount().call();
             console.log(buyersCount);
            
 
             var buyersMap = [];
-            buyersMap = await this.state.LandInstance.methods.getBuyer().call();
+            buyersMap = await this.state.LandInstance.methods.getAgency().call();
             //console.log(buyersMap);
 
-            var verified = await this.state.LandInstance.methods.isLandInspector(currentAddress).call();
+            var verified = await this.state.LandInstance.methods.isAdmin(currentAddress).call();
             //console.log(verified);
             this.setState({ verified: verified });
 
             for (let i = 0; i < buyersCount; i++) {
                 // var i =3;
-                var buyer = await this.state.LandInstance.methods.getBuyerDetails(buyersMap[i]).call();
+                var buyer = await this.state.LandInstance.methods.getAgencyDetails(buyersMap[i]).call();
 
                 var buyer_verify = await this.state.LandInstance.methods.isVerified(buyersMap[i]).call();
                 console.log(buyer_verify);
@@ -156,7 +156,7 @@ class BuyerInfo extends Component {
                 buyerTable.push(<tr><td>{i + 1}</td><td>{buyersMap[i]}</td><td>{buyer[0]}</td><td>{buyer[4]}</td><td>{buyer[1]}</td><td>{buyer[6]}</td>
                     <td>{buyer.verified.toString()==='true' ? ('Verified'):('Rejected')}</td>
                     <td>
-                        <Button onClick={this.verifyBuyer(buyersMap[i])} disabled={buyer_verify || not_verify} className="button-vote">
+                        <Button onClick={this.verifyAgency(buyersMap[i])} disabled={buyer_verify || not_verify} className="button-vote">
                             Verify
                     </Button>
                     </td>

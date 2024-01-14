@@ -38,7 +38,7 @@ class AddLand extends Component {
       registered: '',
       buffer: null,
       ipfsHash: '',
-      propertyPID: '',
+      rfpssId: '12',
       surveyNum: '',
       buffer2: null,
       document: '',
@@ -76,7 +76,7 @@ class AddLand extends Component {
       var verified = await this.state.LandInstance.methods.isVerified(currentAddress).call();
       console.log(verified);
       this.setState({ verified: verified });
-      var registered = await this.state.LandInstance.methods.isSeller(currentAddress).call();
+      var registered = await this.state.LandInstance.methods.isAgency(currentAddress).call();
       console.log(registered);
       this.setState({ registered: registered });
 
@@ -118,22 +118,22 @@ class AddLand extends Component {
   }
 
   //QmYdztkcPJLmGmwLmM4nyBfVatoBMRDuUjmgBupjmTodAP
-  addLand = async () => {
-    this.addimage();
-    this.addDoc();
+  addRfp = async () => {
+    // this.addimage();
+    // this.addDoc();
     // alert('After add image')
     await new Promise(resolve => setTimeout(resolve, 15000));
-    if (this.state.area == '' || this.state.city == '' || this.state.stateLoc == '' || this.state.price == '' || this.state.propertyPID == '' || this.state.surveyNum == '') {
-      alert("All the fields are compulsory!");
-    } else if ((!Number(this.state.area)) || (!Number(this.state.price))) {
-      alert("Land area and Price of Land must be a number!");
-    } else {
-      await this.state.LandInstance.methods.addLand(
+    // if (this.state.area == '' || this.state.city == '' || this.state.stateLoc == '' || this.state.price == '' || this.state.rfpssId == '' || this.state.surveyNum == '') {
+    //   alert("All the fields are compulsory!");
+    // } else if ((!Number(this.state.area)) || (!Number(this.state.price))) {
+    //   alert("Land area and Price of Land must be a number!");
+    // } else {
+      await this.state.LandInstance.methods.addRfp(
         this.state.area,
         this.state.city,
         this.state.stateLoc,
         this.state.price, 
-        this.state.propertyPID,
+        this.state.rfpssId,
         this.state.surveyNum,
         this.state.ipfsHash, 
         this.state.document)
@@ -145,10 +145,10 @@ class AddLand extends Component {
         });
 
       //Reload
-      window.location.reload(false);
+      window.location.reload(true);
     }
-  }
-  // _city,string  _state, uint landPrice, uint _propertyPID,uint _surveyNum,string memory _ipfsHash
+  // }
+  // _city,string  _state, uint rfpPrice, uint _propertyPID,uint _surveyNum,string memory _ipfsHash
 
   updateArea = event => (
     this.setState({ area: event.target.value })
@@ -163,7 +163,7 @@ class AddLand extends Component {
     this.setState({ price: event.target.value })
   )
   updatePID = event => (
-    this.setState({ propertyPID: event.target.value })
+    this.setState({ rfpssId: event.target.value })
   )
   updateSurveyNum = event => (
     this.setState({ surveyNum: event.target.value })
@@ -241,7 +241,7 @@ class AddLand extends Component {
                       <FormGroup>
                         <label>Product ID</label>
                         <Input
-                          placeholder="Area"
+                          placeholder="Prod ID"
                           type="text"
                           value={this.state.area}
                           onChange={this.updateArea}
@@ -255,7 +255,7 @@ class AddLand extends Component {
                       <FormGroup>
                         <label>Product Details</label>
                         <Input
-                          placeholder="City"
+                          placeholder="Prod. Details"
                           type="text"
                           value={this.state.city}
                           onChange={this.updateCity}
@@ -297,7 +297,7 @@ class AddLand extends Component {
                         <Input
                           placeholder="Property PID"
                           type="text"
-                          value={this.state.propertyPID}
+                          value={this.state.rfpssId}
                           onChange={this.updatePID}
                         />
                       </FormGroup>
@@ -308,10 +308,10 @@ class AddLand extends Component {
                       <FormGroup>
                         <label>RFP ID Number</label>
                         <Input
-                          placeholder="Survey Num"
+                          placeholder="RFP Num"
                           type="text"
-                          value={this.state.surveyNum}
-                          onChange={this.updateSurveyNum}
+                          value={this.state.rfpssId}
+                          onChange={this.updatePID}
                         />
                       </FormGroup>
                     </Col>
@@ -341,7 +341,7 @@ class AddLand extends Component {
                 </Form>
               </CardBody>
               <CardFooter>
-                <Button className="btn-fill btn-dark" color="primary" onClick={this.addLand}>
+                <Button className="btn-fill btn-dark" color="primary" onClick={this.addRfp}>
                   Submit RFP Details
                 </Button>
               </CardFooter>

@@ -35,7 +35,7 @@ var buyer;
 var buyerTable = [];
 var verification = [];
 
-class updateBuyer extends Component {
+class updateAgency extends Component {
     constructor(props) {
         super(props)
 
@@ -91,7 +91,7 @@ class updateBuyer extends Component {
               verification.push(<p id = "unknown">Not Yet Verified <i class="fas fa-user-cog"></i></p>);
             }
 
-            buyer = await this.state.LandInstance.methods.getBuyerDetails(currentAddress).call();
+            buyer = await this.state.LandInstance.methods.getAgencyDetails(currentAddress).call();
             console.log(buyer);
             console.log(buyer[0]);
             this.setState({name: buyer[0], age: buyer[5], city: buyer[1], email: buyer[4], aadharNumber: buyer[6], panNumber: buyer[2]});
@@ -118,7 +118,7 @@ class updateBuyer extends Component {
             console.error(error);
         }
     };
-    updateBuyer = async () => {
+    updateAgency = async () => {
       if (this.state.name == '' || this.state.age == '' || this.state.city == '' || this.state.email == '' || this.state.aadharNumber == '' || this.state.panNumber == '') {
           alert("All the fields are compulsory!");
       } else if(this.state.aadharNumber.length != 12){
@@ -129,7 +129,7 @@ class updateBuyer extends Component {
           alert("Your age must be a number");
       } 
       else{
-          await this.state.LandInstance.methods.updateBuyer(
+          await this.state.LandInstance.methods.updateAgency(
               this.state.name,
               this.state.age,
               this.state.city,
@@ -274,7 +274,7 @@ class updateBuyer extends Component {
                         </Form>
                       </CardBody>
                       <CardFooter>
-                        <Button onClick={this.updateBuyer} className="btn-fill" color="primary">
+                        <Button onClick={this.updateAgency} className="btn-fill" color="primary">
                           Update
                       </Button>
                       </CardFooter>
@@ -289,4 +289,4 @@ class updateBuyer extends Component {
     }
 }
 
-export default updateBuyer;
+export default updateAgency;

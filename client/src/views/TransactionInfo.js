@@ -55,10 +55,10 @@ class TransactionInfo extends Component {
         }
     }
 
-    landTransfer = (landId, newOwner) => async () => {
+    landTransfer = (rfpssId, newOwner) => async () => {
         
-        await this.state.LandInstance.methods.LandOwnershipTransfer(
-            landId, newOwner
+        await this.state.LandInstance.methods.RfpOwnershipTransfer(
+            rfpssId, newOwner
         ).send({
             from : this.state.account,
             gas : 2100000
@@ -99,11 +99,11 @@ class TransactionInfo extends Component {
 
             this.setState({ LandInstance: instance, web3: web3, account: accounts[0] });
             
-            var verified = await this.state.LandInstance.methods.isLandInspector(currentAddress).call();
+            var verified = await this.state.LandInstance.methods.isAdmin(currentAddress).call();
             //console.log(verified);
             this.setState({ verified: verified });
             
-            var count = await this.state.LandInstance.methods.getLandsCount().call();
+            var count = await this.state.LandInstance.methods.getRfpCount().call();
             count = parseInt(count);
             var rowsArea = [];
             var rowsCity = [];
@@ -122,7 +122,7 @@ class TransactionInfo extends Component {
                 rowsSurvey.push(<ContractData contract="Land" method="getSurveyNumber" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
               }
             for (var i = 0; i < count; i++) {
-                var request = await this.state.LandInstance.methods.getRequestDetails(i+1).call();
+                var request = await this.state.LandInstance.methods.getBidDetails(i+1).call();
                 var approved = await this.state.LandInstance.methods.isApproved(i+1).call();
                 // console.log(approved);
                 // console.log(request[3]);

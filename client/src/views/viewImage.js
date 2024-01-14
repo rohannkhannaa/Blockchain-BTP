@@ -57,8 +57,8 @@ class viewImage extends Component {
     }
   }
 
-  viewImage = (landId) => {
-    alert(landId);
+  viewImage = (rfpssId) => {
+    alert(rfpssId);
     this.props.history.push({
         pathname: '/viewImage',
       })
@@ -93,7 +93,7 @@ class viewImage extends Component {
       var registered = true;
       this.setState({ registered: registered });
 
-      var count = await this.state.LandInstance.methods.getLandsCount().call();
+      var count = await this.state.LandInstance.methods.getRfpCount().call();
       count = parseInt(count);
       console.log(typeof (count));
       console.log(count);

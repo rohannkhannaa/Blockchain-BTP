@@ -60,8 +60,8 @@ class SDash extends Component {
     }
   }
 
-  viewImage = (landId) => {
-    alert(landId);
+  viewImage = (rfpssId) => {
+    alert(rfpssId);
     this.props.history.push({
         pathname: '/viewImage',
       })
@@ -93,19 +93,19 @@ class SDash extends Component {
       verified = await this.state.LandInstance.methods.isVerified(currentAddress).call();
       console.log(verified);
       this.setState({ verified: verified });
-      var registered = await this.state.LandInstance.methods.isSeller(currentAddress).call();
+      var registered = await this.state.LandInstance.methods.isAgency(currentAddress).call();
       console.log(registered);
       this.setState({ registered: registered });
 
-      var count = await this.state.LandInstance.methods.getLandsCount().call();
+      var count = await this.state.LandInstance.methods.getRfpCount().call();
       count = parseInt(count);
       console.log(typeof (count));
       console.log(count);
       //this.setState({count:count});
 
-      countarr.push(<ContractData contract="Land" method="getLandsCount" />);
-      userarr.push(<ContractData contract="Land" method="getBuyersCount" />);
-      reqsarr.push(<ContractData contract="Land" method="getRequestsCount" />);
+      countarr.push(<ContractData contract="Land" method="getRfpCount" />);
+      userarr.push(<ContractData contract="Land" method="getAgencyCount" />);
+      reqsarr.push(<ContractData contract="Land" method="getBidCount" />);
 
       var rowsArea = [];
       var rowsCity = [];

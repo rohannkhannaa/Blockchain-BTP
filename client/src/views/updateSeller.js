@@ -37,7 +37,7 @@ var seller;
 var sellerTable = [];
 var verification = [];
 
-class updateSeller extends Component {
+class updateShq extends Component {
     constructor(props){
         super(props)
 
@@ -52,7 +52,7 @@ class updateSeller extends Component {
             age: '',
             aadharNumber: '',
             panNumber: '',
-            landsOwned: '',
+            rfpssOwned: '',
             isVerified: false,
             verified: '',
         }
@@ -95,10 +95,10 @@ class updateSeller extends Component {
               verification.push(<p id = "unknown">Not Yet Verified <i class="fas fa-user-cog"></i></p>);
             }
 
-            seller = await this.state.LandInstance.methods.getSellerDetails(currentAddress).call();
+            seller = await this.state.LandInstance.methods.getShqDetails(currentAddress).call();
             console.log(seller);
             console.log(seller[0]);
-            this.setState({name: seller[0], age: seller[1], aadharNumber: seller[2], panNumber: seller[3], landsOwned: seller[4]});
+            this.setState({name: seller[0], age: seller[1], aadharNumber: seller[2], panNumber: seller[3], rfpssOwned: seller[4]});
             //sellerTable.push(<div><p>Name: {seller[0]}</p><p>Age: {seller[1]}</p><p>Aadhar Number: {seller[2]}</p><p>Pan Number: {seller[3]}</p><p>Owned Lands: {seller[4]}</p></div>);
               sellerTable.push(
               <Row>
@@ -124,8 +124,8 @@ class updateSeller extends Component {
           }
     };
 
-    updateSeller = async () => {
-        if (this.state.name == '' || this.state.age == '' || this.state.aadharNumber == '' || this.state.panNumber == '' || this.state.landsOwned == '') {
+    updateShq = async () => {
+        if (this.state.name == '' || this.state.age == '' || this.state.aadharNumber == '' || this.state.panNumber == '' || this.state.rfpssOwned == '') {
             alert("All the fields are compulsory!");
         } else if (this.state.aadharNumber.length != 12) {
             alert("Aadhar Number should be 12 digits long!");
@@ -134,12 +134,12 @@ class updateSeller extends Component {
         } else if (!Number(this.state.age)) {
             alert("Your age must be a number");
         } else {
-            await this.state.LandInstance.methods.updateSeller(
+            await this.state.LandInstance.methods.updateShq(
                 this.state.name,
                 this.state.age,
                 this.state.aadharNumber,
                 this.state.panNumber,
-                this.state.landsOwned, 
+                this.state.rfpssOwned, 
                 )
                 .send({
                     from: this.state.address,
@@ -166,7 +166,7 @@ class updateSeller extends Component {
         this.setState({ panNumber: event.target.value })
     )
     updateOwnedLands = event => (
-        this.setState({ landsOwned: event.target.value })
+        this.setState({ rfpssOwned: event.target.value })
     )
 
     render() {
@@ -251,7 +251,7 @@ class updateSeller extends Component {
                                         </Form>
                                     </CardBody>
                                     <CardFooter>
-                                        <Button onClick={this.updateSeller} className="btn-fill" color="primary">
+                                        <Button onClick={this.updateShq} className="btn-fill" color="primary">
                                             Update
                                         </Button>
                                     </CardFooter>
@@ -266,4 +266,4 @@ class updateSeller extends Component {
     }    
 }
 
-export default updateSeller;
+export default updateShq;

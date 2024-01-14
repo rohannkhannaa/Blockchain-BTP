@@ -53,10 +53,10 @@ class ApproveRequest extends Component {
             verified: '',
         }
     }
-    landTransfer = (landId, newOwner) => async () => {
+    landTransfer = (rfpssId, newOwner) => async () => {
 
-        await this.state.LandInstance.methods.LandOwnershipTransfer(
-            landId, newOwner
+        await this.state.LandInstance.methods.RfpOwnershipTransfer(
+            rfpssId, newOwner
         ).send({
             from: this.state.account,
             gas: 2100000
@@ -97,16 +97,16 @@ class ApproveRequest extends Component {
             const currentAddress = await web3.currentProvider.selectedAddress;
             console.log(currentAddress);
             
-            var requestsCount = await this.state.LandInstance.methods.getRequestsCount().call();
+            var requestsCount = await this.state.LandInstance.methods.getBidCount().call();
             console.log(requestsCount);
-            var verified = await this.state.LandInstance.methods.isLandInspector(currentAddress).call();
+            var verified = await this.state.LandInstance.methods.isAdmin(currentAddress).call();
             //console.log(verified);
             this.setState({ verified: verified });
             // var requestsMap = [];
             // requestsMap = await this.state.LandInstance.methods.getAllRequests().call();
 
             for(let i = 1; i<requestsCount+1; i++){
-                var request = await this.state.LandInstance.methods.getRequestDetails(i).call();
+                var request = await this.state.LandInstance.methods.getBidDetails(i).call();
                 console.log(request);
                 // console.log(request[0].toLowerCase());
                 // console.log(currentAddress);

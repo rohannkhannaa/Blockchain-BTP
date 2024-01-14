@@ -19,7 +19,7 @@ class RegisterSeller extends Component {
             age: '',
             aadharNumber: '',
             panNumber: '',
-            landsOwned: '',
+            rfpssOwned: '0',
             isVerified: false,
             buffer2: null,
             document: '',
@@ -74,25 +74,25 @@ class RegisterSeller extends Component {
         })
       }
 
-    registerSeller = async () => {
-        this.addDoc();
+    registerShq = async () => {
+        // this.addDoc();
         // alert('After add image')
         await new Promise(resolve => setTimeout(resolve, 10000));
-        if (this.state.name == '' || this.state.age == '' || this.state.aadharNumber == '' || this.state.panNumber == '' || this.state.landsOwned == '') {
-            alert("All the fields are compulsory!");
-        } else if (!Number(this.state.aadharNumber) || this.state.aadharNumber.length != 12) {
-            alert("Aadhar Number should be 12 digits long!");
-        } else if (this.state.panNumber.length != 10) {
-            alert("Pan Number should be a 10 digit unique number!");
-        } else if (!Number(this.state.age) || this.state.age < 21) {
-            alert("Your age must be a number");
-        } else {
-            await this.state.LandInstance.methods.registerSeller(
+        // if (this.state.name == '' || this.state.age == '' || this.state.aadharNumber == '' || this.state.panNumber == '' || this.state.rfpssOwned == '') {
+        //     alert("All the fields are compulsory!");
+        // } else if (!Number(this.state.aadharNumber) || this.state.aadharNumber.length != 12) {
+        //     alert("Aadhar Number should be 12 digits long!");
+        // } else if (this.state.panNumber.length != 10) {
+        //     alert("Pan Number should be a 10 digit unique number!");
+        // } else if (!Number(this.state.age) || this.state.age < 21) {
+        //     alert("Your age must be a number");
+        // } else {
+            await this.state.LandInstance.methods.registerShq(
                 this.state.name,
                 this.state.age,
                 this.state.aadharNumber,
                 this.state.panNumber,
-                this.state.landsOwned, 
+                this.state.rfpssOwned, 
                 this.state.document)
                 .send({
                     from: this.state.account,
@@ -103,7 +103,7 @@ class RegisterSeller extends Component {
 
             //Reload
             window.location.reload(false);
-        }
+        // }
     }
 
     updateName = event => (
@@ -119,7 +119,7 @@ class RegisterSeller extends Component {
         this.setState({ panNumber: event.target.value })
     )
     updateOwnedLands = event => (
-        this.setState({ landsOwned: event.target.value })
+        this.setState({ rfpssOwned: event.target.value })
     )
     captureDoc(event) {
         event.preventDefault()
@@ -242,7 +242,7 @@ class RegisterSeller extends Component {
                                     <div className="form-input">
                                         <FormControl
                                             input='text'
-                                            value={this.state.landsOwned}
+                                            value={this.state.rfpssOwned}
                                             onChange={this.updateOwnedLands}
                                         />
                                     </div>
@@ -250,7 +250,7 @@ class RegisterSeller extends Component {
 
 
 
-                                <Button onClick={this.registerSeller} className="button-vote">
+                                <Button onClick={this.registerShq} className="button-vote">
                                     Register as SHQ Team
                   </Button>
                             </div>

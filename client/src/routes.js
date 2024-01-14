@@ -56,7 +56,7 @@ var routes = [
     layout: "/admin",
   },
   {
-    path: "/updateBuyer",
+    path: "/updateAgency",
     name: "",
     rtlName: "الرموز",
     icon: "tim-icons",

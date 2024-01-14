@@ -60,13 +60,13 @@ class Dashboard extends Component {
     }
   }
 
-  requestLand = (seller_address, land_id) => async () => {
+  requestBid = (seller_address, land_id) => async () => {
 
     console.log(seller_address);
     console.log(land_id);
     // this.setState({requested: true});
     // requested = true;
-    await this.state.LandInstance.methods.requestLand(
+    await this.state.LandInstance.methods.requestBid(
       seller_address,
       land_id
     ).send({
@@ -106,24 +106,24 @@ class Dashboard extends Component {
 
       const currentAddress = await web3.currentProvider.selectedAddress;
       console.log(currentAddress);
-      var registered = await this.state.LandInstance.methods.isBuyer(currentAddress).call();
+      var registered = await this.state.LandInstance.methods.isShq(currentAddress).call();
       console.log(registered);
       this.setState({ registered: registered });
-      var count = await this.state.LandInstance.methods.getLandsCount().call();
+      var count = await this.state.LandInstance.methods.getRfpCount().call();
       count = parseInt(count);
       console.log(typeof (count));
       console.log(count);
       var verified = await this.state.LandInstance.methods.isVerified(currentAddress).call();
       console.log(verified);
 
-      // var countbuyer = await this.state.LandInstance.methods.getBuyersCount().call();
-      // var countseller = await this.state.LandInstance.methods.getSellersCount().call();
+      // var countbuyer = await this.state.LandInstance.methods.getAgencyCount().call();
+      // var countseller = await this.state.LandInstance.methods.getShqCount().call();
       // userarr.push(<p>{countseller.toString()}</p>);
 
       // countarr.push(<p>{count.toString()}</p>);
-      countarr.push(<ContractData contract="Land" method="getLandsCount" />);
-      userarr.push(<ContractData contract="Land" method="getSellersCount" />);
-      reqsarr.push(<ContractData contract="Land" method="getRequestsCount" />);
+      countarr.push(<ContractData contract="Land" method="getRfpCount" />);
+      userarr.push(<ContractData contract="Land" method="getShqCount" />);
+      reqsarr.push(<ContractData contract="Land" method="getBidCount" />);
 
       var rowsArea = [];
       var rowsCity = [];
@@ -156,8 +156,8 @@ class Dashboard extends Component {
 
         row.push(<tr><td>{i + 1}</td><td>{rowsArea[i]}</td><td>{rowsCity[i]}</td><td>{rowsState[i]}</td><td>{rowsPrice[i]}</td><td>{rowsSurvey[i]}</td>
           <td>
-            <Button onClick={this.requestLand(dict[i + 1], i + 1)} disabled={!verified || requested} className="button-vote">
-              Request Land
+            <Button onClick={this.requestBid(dict[i + 1], i + 1)} disabled={!verified || requested} className="button-vote">
+              Make bid
             </Button>
           </td>
         </tr>)

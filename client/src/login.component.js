@@ -40,13 +40,13 @@ export default class Login extends Component {
 
             const currentAddress = await web3.currentProvider.selectedAddress;
             this.setState({ LandInstance: instance, web3: web3, account: accounts[0] });
-            var seller = await this.state.LandInstance.methods.isSeller(currentAddress).call();
+            var seller = await this.state.LandInstance.methods.isAgency(currentAddress).call();
             console.log(seller);
             this.setState({ seller: seller });
-            var buyer = await this.state.LandInstance.methods.isBuyer(currentAddress).call();
+            var buyer = await this.state.LandInstance.methods.isShq(currentAddress).call();
             console.log(buyer);
             this.setState({ buyer: buyer });
-            var landInspector = await this.state.LandInstance.methods.isLandInspector(currentAddress).call();
+            var landInspector = await this.state.LandInstance.methods.isAdmin(currentAddress).call();
             console.log(landInspector);
             this.setState({ landInspector: landInspector });
 
