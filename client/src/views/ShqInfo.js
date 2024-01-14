@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Land from "../artifacts/Land.json";
+import Rfp from "../artifacts/Rfp.json";
 import getWeb3 from "../getWeb3";
 import { Line, Bar } from "react-chartjs-2";
 import '../index.css';
@@ -30,23 +30,23 @@ import {
 } from "reactstrap";
 
 const drizzleOptions = {
-    contracts: [Land]
+    contracts: [Rfp]
 }
 
 
-var sellersCount;
-var sellersMap = [];
-var sellerTable = [];
+var shqsCount;
+var shqsMap = [];
+var shqTable = [];
 
-class SellerInfo extends Component {
+class ShqInfo extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            LandInstance: undefined,
+            RfpInstance: undefined,
             account: null,
             web3: null,
-            sellers: 0,
+            shhqs: 0,
             verified: '',
             not_verified: '',
         }
@@ -56,7 +56,7 @@ class SellerInfo extends Component {
         //console.log("Hello");
         //console.log(item);
 
-        await this.state.LandInstance.methods.verifyShq(
+        await this.state.RfpInstance.methods.verifyShq(
             item
         ).send({
             from: this.state.account,
@@ -68,9 +68,9 @@ class SellerInfo extends Component {
 
     }
 
-    NotverifySeller = (item) => async() => {
+    NotverifyShq = (item) => async() => {
 
-        await this.state.LandInstance.methods.rejectShq(
+        await this.state.RfpInstance.methods.rejectShq(
             item
         ).send({
             from: this.state.account,
@@ -96,53 +96,53 @@ class SellerInfo extends Component {
             const currentAddress = await web3.currentProvider.selectedAddress;
             //console.log(currentAddress);
             const networkId = await web3.eth.net.getId();
-            const deployedNetwork = Land.networks[networkId];
+            const deployedNetwork = Rfp.networks[networkId];
             const instance = new web3.eth.Contract(
-                Land.abi,
+                Rfp.abi,
                 deployedNetwork && deployedNetwork.address,
             );
 
-            this.setState({ LandInstance: instance, web3: web3, account: accounts[0] });
+            this.setState({ RfpInstance: instance, web3: web3, account: accounts[0] });
 
 
-            sellersCount = await this.state.LandInstance.methods.getShqCount().call();
-            console.log(sellersCount);
+            shqsCount = await this.state.RfpInstance.methods.getShqCount().call();
+            console.log(shqsCount);
 
             
             
-            sellersMap = await this.state.LandInstance.methods.getShq().call();
+            shqsMap = await this.state.RfpInstance.methods.getShq().call();
             
-            var verified = await this.state.LandInstance.methods.isAdmin(currentAddress).call();
+            var verified = await this.state.RfpInstance.methods.isAdmin(currentAddress).call();
             //console.log(verified);
             this.setState({ verified: verified });
 
 
-            for (let i = 0; i < sellersCount; i++) {
-                var seller = await this.state.LandInstance.methods.getShqDetails(sellersMap[i]).call();
-                console.log(seller);
-                var seller_verify = await this.state.LandInstance.methods.isVerified(sellersMap[i]).call();
-                console.log(seller_verify);
-                seller.verified = seller_verify;
+            for (let i = 0; i < shqsCount; i++) {
+                var shhq = await this.state.RfpInstance.methods.getShqDetails(shqsMap[i]).call();
+                console.log(shhq);
+                var shq_verify = await this.state.RfpInstance.methods.isVerified(shqsMap[i]).call();
+                console.log(shq_verify);
+                shhq.verified = shq_verify;
                 
-                //seller.push(seller_verify);
-                var not_verify = await this.state.LandInstance.methods.isRejected(sellersMap[i]).call();
+                //shhq.push(shq_verify);
+                var not_verify = await this.state.RfpInstance.methods.isRejected(shqsMap[i]).call();
                 console.log(not_verify);
 
 
 
-                sellerTable.push(<tr><td>{i + 1}</td><td>{sellersMap[i]}</td><td>{seller[0]}</td><td>{seller[1]}</td><td>{seller[2]}</td><td>{seller[3]}</td>
-                    <td>{seller.verified.toString()==='true'?('Verified'):('Rejected')}</td>
+                shqTable.push(<tr><td>{i + 1}</td><td>{shqsMap[i]}</td><td>{shhq[0]}</td><td>{shhq[1]}</td><td>{shhq[2]}</td><td>{shhq[3]}</td>
+                    <td>{shhq.verified.toString()==='true'?('Verified'):('Rejected/Pending')}</td>
                     <td>
-                        <Button onClick={this.verifyShq(sellersMap[i])} disabled={seller_verify || not_verify} className="button-vote">
+                        <Button onClick={this.verifyShq(shqsMap[i])} disabled={shq_verify || not_verify} className="button-vote">
                             Verify
                     </Button>
                     </td>
                     <td>
-                        <Button  onClick={this.NotverifySeller(sellersMap[i])} disabled={seller_verify || not_verify} className="btn btn-danger">
+                        <Button  onClick={this.NotverifyShq(shqsMap[i])} disabled={shq_verify || not_verify} className="btn btn-danger">
                         Reject
                     </Button>
                     </td></tr>)
-            console.log(seller[5]);
+            console.log(shhq[5]);
 
 
             }
@@ -221,7 +221,7 @@ class SellerInfo extends Component {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {sellerTable}
+                                                {shqTable}
                                             </tbody>
 
                                         </Table>
@@ -239,4 +239,4 @@ class SellerInfo extends Component {
     }
 }
 
-export default SellerInfo;
+export default ShqInfo;

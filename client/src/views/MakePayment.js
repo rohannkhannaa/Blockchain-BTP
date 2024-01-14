@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
-import Land from "../artifacts/Land.json";
+import Rfp from "../artifacts/Rfp.json";
 import getWeb3 from "../getWeb3";
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { DrizzleProvider } from 'drizzle-react';
@@ -30,19 +30,19 @@ import {
 
 
 const drizzleOptions = {
-  contracts: [Land]
+  contracts: [Rfp]
 }
 
 
 var row = [];
-var landOwner = [];
+var rfpOwner = [];
 
 class Dashboard extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      LandInstance: undefined,
+      RfpInstance: undefined,
       account: null,
       web3: null,
       count: 0,
@@ -51,14 +51,14 @@ class Dashboard extends Component {
   }
 
 
-  makePayment = (seller_address, amount, land_id) => async () => {
+  makePayment = (shq_address, amount, rfp_idd) => async () => {
     // alert(amount);
 
     amount = amount*0.0000057;
     alert(amount);
-    await this.state.LandInstance.methods.payment(
-      seller_address,
-      land_id
+    await this.state.RfpInstance.methods.payment(
+      shq_address,
+      rfp_idd
     ).send({
       from: this.state.account,
       value: this.state.web3.utils.toWei(amount.toString(), "ether"),
@@ -86,20 +86,20 @@ class Dashboard extends Component {
       const accounts = await web3.eth.getAccounts();
 
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = Land.networks[networkId];
+      const deployedNetwork = Rfp.networks[networkId];
       const instance = new web3.eth.Contract(
-        Land.abi,
+        Rfp.abi,
         deployedNetwork && deployedNetwork.address,
       );
 
-      this.setState({ LandInstance: instance, web3: web3, account: accounts[0] });
+      this.setState({ RfpInstance: instance, web3: web3, account: accounts[0] });
 
       const currentAddress = await web3.currentProvider.selectedAddress;
       console.log(currentAddress);
-      var registered = await this.state.LandInstance.methods.isShq(currentAddress).call();
+      var registered = await this.state.RfpInstance.methods.isShq(currentAddress).call();
       console.log(registered);
       this.setState({ registered: registered });
-      var count = await this.state.LandInstance.methods.getRfpCount().call();
+      var count = await this.state.RfpInstance.methods.getRfpCount().call();
       count = parseInt(count);
       console.log(typeof (count));
       console.log(count);
@@ -108,13 +108,13 @@ class Dashboard extends Component {
 
       var dict = {}
       for (var i = 1; i < count + 1; i++) {
-        var address = await this.state.LandInstance.methods.getLandOwner(i).call();
+        var address = await this.state.RfpInstance.methods.getRfpOwner(i).call();
         dict[i] = address;
       }
 
       for (var i = 0; i < count; i++) {
-        var paid = await this.state.LandInstance.methods.isPaid(i + 1).call();
-        var price = await this.state.LandInstance.methods.getPrice(i + 1).call();
+        var paid = await this.state.RfpInstance.methods.isPaid(i + 1).call();
+        var price = await this.state.RfpInstance.methods.getPrice(i + 1).call();
         row.push(<tr><td>{i + 1}</td><td>{dict[i + 1]}</td><td>{price}</td>
           <td>
             <Button onClick={this.makePayment(dict[i + 1], price, i+1)} 
@@ -185,7 +185,7 @@ class Dashboard extends Component {
                 <Col lg="12" md="12">
                   <Card>
                     <CardHeader>
-                      <CardTitle tag="h4">Payment for Lands<span className="duration">₹ 1 = 0.0000057 Ether</span></CardTitle>
+                      <CardTitle tag="h4">Payment for RFPs<span className="duration">₹ 1 = 0.0000057 Ether</span></CardTitle>
 
                     </CardHeader>
                     <CardBody>
@@ -193,7 +193,7 @@ class Dashboard extends Component {
                         <thead className="text-primary">
                           <tr>
                             <th>#</th>
-                            <th>Land Owner</th>
+                            <th>Rfp Owner</th>
                             <th>Price ( in ₹ )</th>
                             <th>Make Payment</th>
                           </tr>

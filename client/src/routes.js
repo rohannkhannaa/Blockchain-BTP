@@ -1,66 +1,58 @@
-import buyerProfile from "./views/buyerProfile";
+import agencyProfile from "./views/agencyProfile";
 import Dashboard from "./views/Dashboard";
 import viewImage from "./views/viewImage";
-import OwnedLands from "./views/OwnedLands";
+import OwnedRfps from "./views/OwnedRfps";
 import MakePayment from "./views/MakePayment";
-import updateBuyer from "./views/updateBuyer";
-import Help from "./Help";
+import updateAgency from "./views/updateAgency";
 
 var routes = [
   {
     path: "/dashboard",
     name: "Dashboard",
-    rtlName: "لوحة القيادة",
+    //rtlName: "لوحة القيادة",
     icon: "tim-icons icon-chart-pie-36",
     component: Dashboard,
     layout: "/admin",
   },
   {
-    path: "/buyerProfile",
-    name: "Buyers Profile",
-    rtlName: "الرموز",
+    path: "/agencyProfile",
+    name: "Agencys Profile",
+    //rtlName: "الرموز",
     icon: "tim-icons icon-single-02",
-    component: buyerProfile,
+    component: agencyProfile,
     layout: "/admin",
   },
   {
     path: "/viewImage",
-    name: "Land Gallery",
-    rtlName: "الرموز",
+    name: "Rfp Gallery",
+    //rtlName: "الرموز",
     icon: "tim-icons icon-image-02",
     component: viewImage,
     layout: "/admin",
   },
   {
-    path: "/OwnedLands",
-    name: "Owned Lands",
-    rtlName: "الرموز",
+    path: "/OwnedRfps",
+    name: "Owned Rfps",
+    //rtlName: "الرموز",
     icon: "tim-icons icon-bank",
-    component: OwnedLands,
+    component: OwnedRfps,
     layout: "/admin",
   },
   {
     path: "/MakePayment",
     name: "Make Payment",
-    rtlName: "الرموز",
+    //rtlName: "الرموز",
     icon: "tim-icons icon-money-coins",
     component: MakePayment,
     layout: "/admin",
   },
-  {
-    path: "/Help",
-    name: "Help",
-    rtlName: "الرموز",
-    icon: "tim-icons icon-single-02",
-    component: Help,
-    layout: "/admin",
-  },
+  
   {
     path: "/updateAgency",
     name: "",
-    rtlName: "الرموز",
+    //rtlName: "الرموز",
     icon: "tim-icons",
-    component: updateBuyer,
+    component: updateAgency,
     layout: "/admin",
   },
 ];

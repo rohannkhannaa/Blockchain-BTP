@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import LandContract from "./artifacts/Land.json";
+import RfpContract from "./artifacts/Rfp.json";
 import getWeb3 from "./getWeb3";
 import ipfs from "./ipfs";
 
@@ -13,12 +13,12 @@ import {
 
 //import Navigation from './Navigation'
 
-class RegisterBuyer extends Component {
+class RegisterAgency extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      LandInstance: undefined,
+      RfpInstance: undefined,
       account: null,
       web3: null,
       name: "",
@@ -49,14 +49,14 @@ class RegisterBuyer extends Component {
       const accounts = await web3.eth.getAccounts();
 
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = LandContract.networks[networkId];
+      const deployedNetwork = RfpContract.networks[networkId];
       const instance = new web3.eth.Contract(
-        LandContract.abi,
+        RfpContract.abi,
         deployedNetwork && deployedNetwork.address
       );
 
       this.setState({
-        LandInstance: instance,
+        RfpInstance: instance,
         web3: web3,
         account: accounts[0],
       });
@@ -82,7 +82,7 @@ class RegisterBuyer extends Component {
     });
   };
 
-  RegisterBuyer = async () => {
+  RegisterAgency = async () => {
     // this.addDoc();
     // alert('After add image')
     await new Promise((resolve) => setTimeout(resolve, 10000));
@@ -102,7 +102,7 @@ class RegisterBuyer extends Component {
     //     alert('Please enter a valid email address\n');
     // }
     // else{
-    await this.state.LandInstance.methods
+    await this.state.RfpInstance.methods
       .registerAgency(
         this.state.name,
         this.state.age,
@@ -151,7 +151,7 @@ class RegisterBuyer extends Component {
           {/* <div className="img-wrapper">
                         <img src="https://i.pinimg.com/originals/71/6e/00/716e00537e8526347390d64ec900107d.png" className="logo" />
                         <div className="wine-text-container">
-                            <div className="site-title wood-text">Land Registry</div>
+                            <div className="site-title wood-text">Rfp Registry</div>
                         </div>
                     </div> */}
           <div className="auth-wrapper">
@@ -261,7 +261,7 @@ class RegisterBuyer extends Component {
                   <FormFile id="File2" onChange={this.captureDoc} />
                 </FormGroup> */}
 
-                <Button onClick={this.RegisterBuyer} className="button-vote">
+                <Button onClick={this.RegisterAgency} className="button-vote">
                   Register as Development Agency
                 </Button>
               </div>
@@ -273,4 +273,4 @@ class RegisterBuyer extends Component {
   }
 }
 
-export default RegisterBuyer;
+export default RegisterAgency;

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Line, Bar } from "react-chartjs-2";
-import LandContract from "../artifacts/Land.json";
-import Land from "../artifacts/Land.json";
+import RfpContract from "../artifacts/Rfp.json";
+import Rfp from "../artifacts/Rfp.json";
 import getWeb3 from "../getWeb3";
 import { DrizzleProvider } from 'drizzle-react';
 import { Spinner  } from 'react-bootstrap';
@@ -34,7 +34,7 @@ import "../card.css";
 import "../index.css";
 
 const drizzleOptions = {
-  contracts: [Land]
+  contracts: [Rfp]
 }
 
 
@@ -49,7 +49,7 @@ class SDash extends Component {
     super(props)
 
     this.state = {
-      LandInstance: undefined,
+      RfpInstance: undefined,
       account: null,
       web3: null,
       flag: null,
@@ -81,31 +81,31 @@ class SDash extends Component {
       const accounts = await web3.eth.getAccounts();
 
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = Land.networks[networkId];
+      const deployedNetwork = Rfp.networks[networkId];
       const instance = new web3.eth.Contract(
-        Land.abi,
+        Rfp.abi,
         deployedNetwork && deployedNetwork.address,
       );
 
       const currentAddress = await web3.currentProvider.selectedAddress;
       console.log(currentAddress);
-      this.setState({ LandInstance: instance, web3: web3, account: accounts[0] });
-      verified = await this.state.LandInstance.methods.isVerified(currentAddress).call();
+      this.setState({ RfpInstance: instance, web3: web3, account: accounts[0] });
+      verified = await this.state.RfpInstance.methods.isVerified(currentAddress).call();
       console.log(verified);
       this.setState({ verified: verified });
-      var registered = await this.state.LandInstance.methods.isAgency(currentAddress).call();
+      var registered = await this.state.RfpInstance.methods.isAgency(currentAddress).call();
       console.log(registered);
       this.setState({ registered: registered });
 
-      var count = await this.state.LandInstance.methods.getRfpCount().call();
+      var count = await this.state.RfpInstance.methods.getRfpCount().call();
       count = parseInt(count);
       console.log(typeof (count));
       console.log(count);
       //this.setState({count:count});
 
-      countarr.push(<ContractData contract="Land" method="getRfpCount" />);
-      userarr.push(<ContractData contract="Land" method="getAgencyCount" />);
-      reqsarr.push(<ContractData contract="Land" method="getBidCount" />);
+      countarr.push(<ContractData contract="Rfp" method="getRfpCount" />);
+      userarr.push(<ContractData contract="Rfp" method="getAgencyCount" />);
+      reqsarr.push(<ContractData contract="Rfp" method="getBidCount" />);
 
       var rowsArea = [];
       var rowsCity = [];
@@ -116,12 +116,12 @@ class SDash extends Component {
       
 
       for (var i = 1; i < count + 1; i++) {
-        rowsArea.push(<ContractData contract="Land" method="getArea" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
-        rowsCity.push(<ContractData contract="Land" method="getCity" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
-        rowsState.push(<ContractData contract="Land" method="getState" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
-        rowsPrice.push(<ContractData contract="Land" method="getPrice" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
-        rowsPID.push(<ContractData contract="Land" method="getPID" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
-        rowsSurvey.push(<ContractData contract="Land" method="getSurveyNumber" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
+        rowsArea.push(<ContractData contract="Rfp" method="getArea" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
+        rowsCity.push(<ContractData contract="Rfp" method="getCity" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
+        rowsState.push(<ContractData contract="Rfp" method="getState" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
+        rowsPrice.push(<ContractData contract="Rfp" method="getPrice" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
+        rowsPID.push(<ContractData contract="Rfp" method="getPID" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
+        rowsSurvey.push(<ContractData contract="Rfp" method="getSurveyNumber" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
       }
     
 
@@ -231,7 +231,7 @@ class SDash extends Component {
                 <CardBody>
                   <div className="chart-area">
 
-                    <Button href="/Seller/AddLand" disabled={!this.state.verified} className="btn-fill btn-dark" color="primary">
+                    <Button href="/Shq/AddRfp" disabled={!this.state.verified} className="btn-fill btn-dark" color="primary">
                       Add New RFP
                 </Button>
                   </div>
@@ -246,7 +246,7 @@ class SDash extends Component {
                 <CardBody>
                   <div className="chart-area">
 
-                    <Button href="/seller/sellerProfile" className="btn-fill btn-dark" color="primary">
+                    <Button href="/Shq/shqProfile" className="btn-fill btn-dark" color="primary">
                       View my profile
                 </Button>
                   </div>
@@ -261,7 +261,7 @@ class SDash extends Component {
                 <CardBody>
                   <div className="chart-area">
 
-                    <Button href="/Seller/ApproveRequest" disabled={!this.state.verified} className="btn-fill btn-dark" color="primary">
+                    <Button href="/Shq/ApproveRequest" disabled={!this.state.verified} className="btn-fill btn-dark" color="primary">
                       View all Bid Requests
                         </Button>
                   </div>

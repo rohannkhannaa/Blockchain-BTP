@@ -72,7 +72,7 @@ function AdminNavbar(props) {
               </NavbarToggler>
             </div>
             <NavbarBrand href="#pablo" onClick={(e) => e.preventDefault()}>
-              {props.brandText==="BuyerInfo" ? ('Development Agencies') : (props.brandText==="SellerInfo" ? ('SHQ Team') : props.brandText==="TransactionInfo" ? ('Requests for Proposal Details') : ('Dashboard'))}
+              {props.brandText==="AgencyInfo" ? ('Development Agencies') : (props.brandText==="ShqInfo" ? ('SHQ Team') : props.brandText==="TransactionInfo" ? ('Requests for Proposal Details') : ('Dashboard'))}
             </NavbarBrand>
           </div>
           <NavbarToggler onClick={toggleCollapse}>

@@ -1,6 +1,6 @@
 pragma solidity >= 0.5.2;
 pragma experimental ABIEncoderV2;
-contract Land { // RFP
+contract Rfp { // RFP
     struct RfpReg { // RfpReg
         uint id;
         uint area;
@@ -81,15 +81,15 @@ contract Land { // RFP
     uint public requestsCount;
 
     event Registration(address _registrationId);
-    event AddingRfp(uint indexed _landId);
-    event Rfprequested(address _sellerId);
-    event requestApproved(address _buyerId);
+    event AddingRfp(uint indexed _rfpId);
+    event Rfprequested(address _shqId);
+    event requestApproved(address _agencyId);
     event Verified(address _id);
     event Rejected(address _id);
 
     constructor() public{
         RfpAdmin = msg.sender ;
-        addAdmin("Inspector 1", 45, "Tehsil Manager");
+        addAdmin("Admin 1", 31, "Admin Manager");
     }
 
     // addAdmin
@@ -146,46 +146,46 @@ contract Land { // RFP
         return rfps[i].document;
     }
     
-    function getLandOwner(uint id) public view returns (address) {
+    function getRfpOwner(uint id) public view returns (address) {
         return RfpOwner[id];
     }
 
     // verifyShq
-    function verifyShq(address _sellerId) public{
+    function verifyShq(address _shqId) public{
         require(isAdmin(msg.sender));
 
-        ShqVerification[_sellerId] = true;
-        emit Verified(_sellerId);
+        ShqVerification[_shqId] = true;
+        emit Verified(_shqId);
     }
     
     // rejectShq 
-    function rejectShq(address _sellerId) public{
+    function rejectShq(address _shqId) public{
         require(isAdmin(msg.sender));
 
-        ShqRejection[_sellerId] = true;
-        emit Rejected(_sellerId);
+        ShqRejection[_shqId] = true;
+        emit Rejected(_shqId);
     }
 
     // verifyAgency
-    function verifyAgency(address _buyerId) public{
+    function verifyAgency(address _agencyId) public{
         require(isAdmin(msg.sender));
 
-        AgencyVerification[_buyerId] = true;
-        emit Verified(_buyerId);
+        AgencyVerification[_agencyId] = true;
+        emit Verified(_agencyId);
     }
     // rejectAgency
-    function rejectAgency(address _buyerId) public{
+    function rejectAgency(address _agencyId) public{
         require(isAdmin(msg.sender));
 
-        AgencyRejection[_buyerId] = true;
-        emit Rejected(_buyerId);
+        AgencyRejection[_agencyId] = true;
+        emit Rejected(_agencyId);
     }
     
     // verifyRfp
-    function verifyRfp(uint _landId) public{
+    function verifyRfp(uint _rfpId) public{
         require(isAdmin(msg.sender));
 
-        RfpVerification[_landId] = true;
+        RfpVerification[_rfpId] = true;
     }
 
     // isRfpVerified
@@ -246,22 +246,22 @@ contract Land { // RFP
         // emit AddingRfp(rfpCount);
     }
 
-    //registration of seller
+    //registration of shhq
     // registerShq
-    function registerShq(string memory _name, uint _age, string memory _aadharNumber, string memory _panNumber, string memory _landsOwned, string memory _document) public {
+    function registerShq(string memory _name, uint _age, string memory _aadharNumber, string memory _panNumber, string memory _rfpOwned, string memory _document) public {
         //require that Shq is not already registered
         require(!RegisteredAddressMapping[msg.sender]);
 
         RegisteredAddressMapping[msg.sender] = true;
         RegisteredShqMapping[msg.sender] = true ;
         agencyCount++;
-        ShqMapping[msg.sender] = Shq(msg.sender, _name, _age, _aadharNumber,_panNumber, _landsOwned, _document);
+        ShqMapping[msg.sender] = Shq(msg.sender, _name, _age, _aadharNumber,_panNumber, _rfpOwned, _document);
         shqList.push(msg.sender);
         emit Registration(msg.sender);
     }
 
     // updateShq
-    function updateShq(string memory _name, uint _age, string memory _aadharNumber, string memory _panNumber, string memory _landsOwned) public {
+    function updateShq(string memory _name, uint _age, string memory _aadharNumber, string memory _panNumber, string memory _rfpOwned) public {
         //require that Shq is already registered
         require(RegisteredAddressMapping[msg.sender] && (ShqMapping[msg.sender].id == msg.sender));
 
@@ -269,7 +269,7 @@ contract Land { // RFP
         ShqMapping[msg.sender].age = _age;
         ShqMapping[msg.sender].aadharNumber = _aadharNumber;
         ShqMapping[msg.sender].panNumber = _panNumber;
-        ShqMapping[msg.sender].rfpssOwned = _landsOwned;
+        ShqMapping[msg.sender].rfpssOwned = _rfpOwned;
 
     }
     // getShq
@@ -321,15 +321,15 @@ contract Land { // RFP
     }
 
     // requestBid
-    function requestBid(address _sellerId, uint _landId) public{
+    function requestBid(address _shqId, uint _rfpId) public{
         require(isShq(msg.sender) && isVerified(msg.sender));
         
         requestsCount++;
-        BidsMapping[requestsCount] = BidRequest(requestsCount, _sellerId, msg.sender, _landId);
+        BidsMapping[requestsCount] = BidRequest(requestsCount, _shqId, msg.sender, _rfpId);
         RequestStatus[requestsCount] = false;
         RequestedRfp[requestsCount] = true;
 
-        emit Rfprequested(_sellerId);
+        emit Rfprequested(_shqId);
     }
 
     // getBidDetails
@@ -356,20 +356,20 @@ contract Land { // RFP
 
     }
 
-    function RfpOwnershipTransfer(uint _landId, address _newOwner) public{
+    function RfpOwnershipTransfer(uint _rfpId, address _newOwner) public{
         require(isAdmin(msg.sender));
 
-        RfpOwner[_landId] = _newOwner;
+        RfpOwner[_rfpId] = _newOwner;
     }
 
-    function isPaid(uint _landId) public view returns (bool) {
-        if(PaymentReceived[_landId]){
+    function isPaid(uint _rfpId) public view returns (bool) {
+        if(PaymentReceived[_rfpId]){
             return true;
         }
     }
 
-    function payment(address payable _receiver, uint _landId) public payable {
-        PaymentReceived[_landId] = true;
+    function payment(address payable _receiver, uint _rfpId) public payable {
+        PaymentReceived[_rfpId] = true;
         _receiver.transfer(msg.value);
     }
 }

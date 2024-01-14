@@ -6,18 +6,17 @@ import PerfectScrollbar from "perfect-scrollbar";
 
 // core components
 import AdminNavbar from "../../components/Navbars/AdminNavbar";
-import Footer from "../../components/Footer/Footer";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import FixedPlugin from "../../components/FixedPlugin/FixedPlugin";
-import LIDashboard from "../../views/LIDashboard";
-import routes from "../../routesLI";
+import AddRfp from "../../views/AddRfp";
+import routes from "../../routes";
 
 import logo from "../../assets/img/react-logo.png";
 import { BackgroundColorContext } from "../../contexts/BackgroundColorContext";
 
 var ps;
 
-function LI(props) {
+function Rfp(props) {
   const location = useLocation();
   const mainPanelRef = React.useRef(null);
   const [sidebarOpened, setsidebarOpened] = React.useState(
@@ -62,30 +61,15 @@ function LI(props) {
     document.documentElement.classList.toggle("nav-open");
     setsidebarOpened(!sidebarOpened);
   };
-  const getRoutes = (routes) => {
-    return routes.map((prop, key) => {
-      if (prop.layout === "/LI") {
-        return (
-          <Route
-            path={prop.layout + prop.path}
-            component={prop.component}
-            key={key}
-          />
-        );
-      } else {
-        return null;
-      }
-    });
-  };
-  
-  const getBrandText = (path) => {
-    for (let i = 0; i < routes.length; i++) {
-      if (location.pathname.indexOf(routes[i].layout + routes[i].path) !== -1) {
-        return routes[i].name;
-      }
-    }
-    return "Brand";
-  };
+
+  // const getBrandText = (path) => {
+  //   for (let i = 0; i < routes.length; i++) {
+  //     if (location.pathname.indexOf(routes[i].layout + routes[i].path) !== -1) {
+  //       return routes[i].name;
+  //     }
+  //   }
+  //   return "Brand";
+  // };
   return (
     <BackgroundColorContext.Consumer>
       {({ color, changeColor }) => (
@@ -95,30 +79,29 @@ function LI(props) {
               routes={routes}
               logo={{
                 outterLink: "#",
-                text: "Land Registration",
+                text: "Rfp Registration",
                 imgSrc: logo,
               }}
               toggleSidebar={toggleSidebar}
             />
             <div className="main-panel" ref={mainPanelRef} data={color}>
-            <AdminNavbar
-                brandText={getBrandText(location.pathname)}
-                toggleSidebar={toggleSidebar}
-                sidebarOpened={sidebarOpened}
+              <AdminNavbar
               />
               <Switch>
-                {getRoutes(routes)}
-                <Redirect from="*" to="/LI/LIDashboard" />
+                <Route
+                  path="/admin/AddRfp"
+                  component={AddRfp}
+                />
+                <Redirect from="*" to="/admin/AddRfp" />
               </Switch>
-              <Footer fluid />
 
             </div>
           </div>
-          {/* <FixedPlugin bgColor={color} handleBgClick={changeColor} /> */}
+          <FixedPlugin bgColor={color} handleBgClick={changeColor} />
         </React.Fragment>
       )}
     </BackgroundColorContext.Consumer>
   );
 }
 
-export default LI;
+export default Rfp;

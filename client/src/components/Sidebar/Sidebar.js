@@ -111,7 +111,7 @@ function Sidebar(props) {
                     key={key}
                   >
                     {
-                      prop.name === 'Land Gallery' ||  prop.name === 'Help' || prop.name === '' || prop.name==='Make Payment'? (<>
+                      prop.name === 'Rfp Gallery' ||   prop.name === '' || prop.name==='Make Payment'? (<>
                       </>) : (<>
                       <Button
                         href={prop.layout + prop.path}
@@ -121,7 +121,7 @@ function Sidebar(props) {
                       >
                         <i className={prop.icon} />
 
-                        <p>{rtlActive ? prop.rtlName : prop.name==="BuyerInfo" ? ('Development Agencies') : (prop.name==="SellerInfo" ? ('SHQ Team') : prop.name==="TransactionInfo" ? ('RFP Details') : (prop.name==="Add Land" ? ('Add new RFP') : (prop.name==="Seller Profile" ? ('My Profile') : (prop.name==="Land Requests" ? ('Bid Requests') : (prop.name==="Buyers Profile" ? ('My Profile') : (prop.name==="Owned Lands" ? ('View Assigned Contracts') : (prop.name)))))))}</p>
+                        <p>{rtlActive ? prop.rtlName : prop.name==="AgencyInfo" ? ('Development Agencies') : (prop.name==="ShqInfo" ? ('SHQ Team') : prop.name==="TransactionInfo" ? ('RFP Details') : (prop.name==="Add Rfp" ? ('Add new RFP') : (prop.name==="Shq Profile" ? ('My Profile') : (prop.name==="Rfp Requests" ? ('Bid Requests') : (prop.name==="Agencys Profile" ? ('My Profile') : (prop.name==="Owned RFPs" ? ('View Assigned Contracts') : (prop.name)))))))}</p>
                       </Button>
                       </>)
                     }
@@ -143,7 +143,7 @@ Sidebar.defaultProps = {
 };
 
 Sidebar.propTypes = {
-  // if true, then instead of the routes[i].name, routes[i].rtlName will be rendered
+  // if true, then instead of the routes[i].name, routes[i].//rtlName will be rendered
   // insde the links of this component
   rtlActive: PropTypes.bool,
   routes: PropTypes.arrayOf(PropTypes.object),

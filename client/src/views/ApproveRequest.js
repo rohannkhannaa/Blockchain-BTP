@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Land from "../artifacts/Land.json"
+import Rfp from "../artifacts/Rfp.json"
 import getWeb3 from "../getWeb3"
 import '../index.css';
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
@@ -33,7 +33,7 @@ import {
 } from 'drizzle-react-components'
 
 const drizzleOptions = {
-    contracts: [Land]
+    contracts: [Rfp]
 }
 
 var requestTable = [];
@@ -43,7 +43,7 @@ class ApproveRequest extends Component {
         super(props)
 
         this.state = {
-            LandInstance: undefined,
+            RfpInstance: undefined,
             account: null,
             web3: null,
             registered: '',
@@ -52,7 +52,7 @@ class ApproveRequest extends Component {
     }
     approveRequest = (reqId) => async () => {
 
-        await this.state.LandInstance.methods.approveRequest(
+        await this.state.RfpInstance.methods.approveRequest(
             reqId
         ).send({
             from: this.state.account,
@@ -77,25 +77,25 @@ class ApproveRequest extends Component {
             const accounts = await web3.eth.getAccounts();
 
             const networkId = await web3.eth.net.getId();
-            const deployedNetwork = Land.networks[networkId];
+            const deployedNetwork = Rfp.networks[networkId];
             const instance = new web3.eth.Contract(
-                Land.abi,
+                Rfp.abi,
                 deployedNetwork && deployedNetwork.address,
             );
 
-            this.setState({ LandInstance: instance, web3: web3, account: accounts[0] });
+            this.setState({ RfpInstance: instance, web3: web3, account: accounts[0] });
 
             const currentAddress = await web3.currentProvider.selectedAddress;
             console.log(currentAddress);
-            var registered = await this.state.LandInstance.methods.isAgency(currentAddress).call();
+            var registered = await this.state.RfpInstance.methods.isAgency(currentAddress).call();
             console.log(registered);
             this.setState({ registered: registered });
-            var requestsCount = await this.state.LandInstance.methods.getBidCount().call();
+            var requestsCount = await this.state.RfpInstance.methods.getBidCount().call();
             console.log(requestsCount);
             
             for (let i = 1; i < requestsCount + 1; i++) {
-                var request = await this.state.LandInstance.methods.getBidDetails(i).call();
-                var approved = await this.state.LandInstance.methods.isApproved(i).call();
+                var request = await this.state.RfpInstance.methods.getBidDetails(i).call();
+                var approved = await this.state.RfpInstance.methods.isApproved(i).call();
                 console.log(approved);
                 if (currentAddress == request[0].toLowerCase()) {
                     requestTable.push(<tr><td>{i}</td><td>{request[1]}</td><td>{request[2]}</td><td>{request[3].toString()}</td>

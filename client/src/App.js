@@ -1,5 +1,5 @@
 import React from 'react';
-import Land from './artifacts/Land.json';
+import Rfp from './artifacts/Rfp.json';
 import Login from "./login.component";
 import ReactDOM from 'react-dom';
 import './index.css';
@@ -14,12 +14,12 @@ import {
 } from 'drizzle-react-components'
 
 const drizzleOptions = {
-    contracts: [Land]
+    contracts: [Rfp]
 }
 
 var rows = [];
 for (var i = 1; i < 5; i++) {
-    rows.push(<ContractData contract="Land" method="getArea" methodArgs={[i, { from: "0xe0786c396EEf88a42782cfd63D2329cA14b62C4C"}]} />);
+    rows.push(<ContractData contract="Rfp" method="getArea" methodArgs={[i, { from: "0xe0786c396EEf88a42782cfd63D2329cA14b62C4C"}]} />);
 }
 
 function App() {

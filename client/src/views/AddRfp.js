@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import LandContract from "../artifacts/Land.json";
+import RfpContract from "../artifacts/Rfp.json";
 import getWeb3 from "../getWeb3";
 import ipfs from '../ipfs';
 
@@ -20,28 +20,28 @@ import { Spinner,   FormFile} from 'react-bootstrap';
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 
-class AddLand extends Component {
+class AddRfp extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      LandInstance: undefined,
+      RfpInstance: undefined,
       account: null,
       web3: null,
       area: '',
       city: '',
       stateLoc: '',
       price: '',
-      lands: null,
+      rfps: null,
       verficationStatus: false,
       verified: '',
       registered: '',
       buffer: null,
       ipfsHash: '',
-      rfpssId: '12',
-      surveyNum: '',
+      rfpssId: '',
+      surveyNum: '12',
       buffer2: null,
-      document: '',
+      document: '#',
     }
     this.captureFile = this.captureFile.bind(this);
     this.addimage = this.addimage.bind(this);
@@ -63,20 +63,20 @@ class AddLand extends Component {
       const accounts = await web3.eth.getAccounts();
 
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = LandContract.networks[networkId];
+      const deployedNetwork = RfpContract.networks[networkId];
       const instance = new web3.eth.Contract(
-        LandContract.abi,
+        RfpContract.abi,
         deployedNetwork && deployedNetwork.address,
       );
 
-      this.setState({ LandInstance: instance, web3: web3, account: accounts[0] });
+      this.setState({ RfpInstance: instance, web3: web3, account: accounts[0] });
       const currentAddress = await web3.currentProvider.selectedAddress;
       console.log(currentAddress);
-      this.setState({ LandInstance: instance, web3: web3, account: accounts[0] });
-      var verified = await this.state.LandInstance.methods.isVerified(currentAddress).call();
+      this.setState({ RfpInstance: instance, web3: web3, account: accounts[0] });
+      var verified = await this.state.RfpInstance.methods.isVerified(currentAddress).call();
       console.log(verified);
       this.setState({ verified: verified });
-      var registered = await this.state.LandInstance.methods.isAgency(currentAddress).call();
+      var registered = await this.state.RfpInstance.methods.isAgency(currentAddress).call();
       console.log(registered);
       this.setState({ registered: registered });
 
@@ -126,9 +126,9 @@ class AddLand extends Component {
     // if (this.state.area == '' || this.state.city == '' || this.state.stateLoc == '' || this.state.price == '' || this.state.rfpssId == '' || this.state.surveyNum == '') {
     //   alert("All the fields are compulsory!");
     // } else if ((!Number(this.state.area)) || (!Number(this.state.price))) {
-    //   alert("Land area and Price of Land must be a number!");
+    //   alert("Rfp area and Price of Rfp must be a number!");
     // } else {
-      await this.state.LandInstance.methods.addRfp(
+      await this.state.RfpInstance.methods.addRfp(
         this.state.area,
         this.state.city,
         this.state.stateLoc,
@@ -141,7 +141,7 @@ class AddLand extends Component {
           from: this.state.account,
           gas: 2100000
         }).then(response => {
-          this.props.history.push("/Seller/SellerDashboard");
+          this.props.history.push("/Shq/ShqDashboard");
         });
 
       //Reload
@@ -319,7 +319,7 @@ class AddLand extends Component {
                   {/* <Row>
                     <Col md="12">
                       <FormGroup>
-                        <label>Insert Land Image</label>
+                        <label>Insert Rfp Image</label>
                         <FormFile
                           id="File1"
                           onChange={this.captureFile}
@@ -354,4 +354,4 @@ class AddLand extends Component {
   }
 }
 
-export default AddLand;
+export default AddRfp;

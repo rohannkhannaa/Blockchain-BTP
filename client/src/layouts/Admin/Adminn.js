@@ -6,17 +6,18 @@ import PerfectScrollbar from "perfect-scrollbar";
 
 // core components
 import AdminNavbar from "../../components/Navbars/AdminNavbar";
+import Footer from "../../components/Footer/Footer";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import FixedPlugin from "../../components/FixedPlugin/FixedPlugin";
-import AddLand from "../../views/AddLand";
-import routes from "../../routes";
+import AdminDashboard from "../../views/AdminDashboard";
+import routes from "../../routesAdmin";
 
 import logo from "../../assets/img/react-logo.png";
 import { BackgroundColorContext } from "../../contexts/BackgroundColorContext";
 
 var ps;
 
-function Land(props) {
+function Adminn(props) {
   const location = useLocation();
   const mainPanelRef = React.useRef(null);
   const [sidebarOpened, setsidebarOpened] = React.useState(
@@ -61,15 +62,30 @@ function Land(props) {
     document.documentElement.classList.toggle("nav-open");
     setsidebarOpened(!sidebarOpened);
   };
-
-  // const getBrandText = (path) => {
-  //   for (let i = 0; i < routes.length; i++) {
-  //     if (location.pathname.indexOf(routes[i].layout + routes[i].path) !== -1) {
-  //       return routes[i].name;
-  //     }
-  //   }
-  //   return "Brand";
-  // };
+  const getRoutes = (routes) => {
+    return routes.map((prop, key) => {
+      if (prop.layout === "/Adminn") {
+        return (
+          <Route
+            path={prop.layout + prop.path}
+            component={prop.component}
+            key={key}
+          />
+        );
+      } else {
+        return null;
+      }
+    });
+  };
+  
+  const getBrandText = (path) => {
+    for (let i = 0; i < routes.length; i++) {
+      if (location.pathname.indexOf(routes[i].layout + routes[i].path) !== -1) {
+        return routes[i].name;
+      }
+    }
+    return "Brand";
+  };
   return (
     <BackgroundColorContext.Consumer>
       {({ color, changeColor }) => (
@@ -79,29 +95,30 @@ function Land(props) {
               routes={routes}
               logo={{
                 outterLink: "#",
-                text: "Land Registration",
+                text: "Rfp Registration",
                 imgSrc: logo,
               }}
               toggleSidebar={toggleSidebar}
             />
             <div className="main-panel" ref={mainPanelRef} data={color}>
-              <AdminNavbar
+            <AdminNavbar
+                brandText={getBrandText(location.pathname)}
+                toggleSidebar={toggleSidebar}
+                sidebarOpened={sidebarOpened}
               />
               <Switch>
-                <Route
-                  path="/admin/AddLand"
-                  component={AddLand}
-                />
-                <Redirect from="*" to="/admin/AddLand" />
+                {getRoutes(routes)}
+                <Redirect from="*" to="/Adminn/AdminDashboard" />
               </Switch>
+              <Footer fluid />
 
             </div>
           </div>
-          <FixedPlugin bgColor={color} handleBgClick={changeColor} />
+          {/* <FixedPlugin bgColor={color} handleBgClick={changeColor} /> */}
         </React.Fragment>
       )}
     </BackgroundColorContext.Consumer>
   );
 }
 
-export default Land;
+export default Adminn;

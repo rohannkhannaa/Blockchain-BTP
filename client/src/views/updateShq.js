@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Land from "../artifacts/Land.json"
+import Rfp from "../artifacts/Rfp.json"
 import getWeb3 from "../getWeb3"
 
 import '../index.css';
@@ -28,13 +28,13 @@ import {
 } from 'drizzle-react-components'
 
 const drizzleOptions = {
-    contracts: [Land]
+    contracts: [Rfp]
 }
 
-// var buyers = 0;
-// var sellers = 0;
-var seller;
-var sellerTable = [];
+// var agencys = 0;
+// var shhqs = 0;
+var shhq;
+var shqTable = [];
 var verification = [];
 
 class updateShq extends Component {
@@ -42,11 +42,11 @@ class updateShq extends Component {
         super(props)
 
         this.state = {
-            LandInstance: undefined,
+            RfpInstance: undefined,
             account: null,
             web3: null,
-            buyers: 0,
-            sellers: 0,
+            agencys: 0,
+            shhqs: 0,
             address: '',
             name: '',
             age: '',
@@ -74,20 +74,20 @@ class updateShq extends Component {
             const currentAddress = await web3.currentProvider.selectedAddress;
             console.log(currentAddress);
             const networkId = await web3.eth.net.getId();
-            const deployedNetwork = Land.networks[networkId];
+            const deployedNetwork = Rfp.networks[networkId];
             const instance = new web3.eth.Contract(
-                Land.abi,
+                Rfp.abi,
                 deployedNetwork && deployedNetwork.address,
             );
 
-            this.setState({ LandInstance: instance, web3: web3, account: accounts[0] });
+            this.setState({ RfpInstance: instance, web3: web3, account: accounts[0] });
             this.setState({address: currentAddress});
-            var seller_verify = await this.state.LandInstance.methods.isVerified(currentAddress).call();
-            console.log(seller_verify);
+            var shq_verify = await this.state.RfpInstance.methods.isVerified(currentAddress).call();
+            console.log(shq_verify);
                 
-            var not_verify = await this.state.LandInstance.methods.isRejected(currentAddress).call();
+            var not_verify = await this.state.RfpInstance.methods.isRejected(currentAddress).call();
             console.log(not_verify);
-            if(seller_verify){
+            if(shq_verify){
               verification.push(<p id = "verified">Verified <i class="fas fa-user-check"></i></p>);
             }else if(not_verify){
               verification.push(<p  id = "rejected">Rejected <i class="fas fa-user-times"></i></p>);
@@ -95,12 +95,12 @@ class updateShq extends Component {
               verification.push(<p id = "unknown">Not Yet Verified <i class="fas fa-user-cog"></i></p>);
             }
 
-            seller = await this.state.LandInstance.methods.getShqDetails(currentAddress).call();
-            console.log(seller);
-            console.log(seller[0]);
-            this.setState({name: seller[0], age: seller[1], aadharNumber: seller[2], panNumber: seller[3], rfpssOwned: seller[4]});
-            //sellerTable.push(<div><p>Name: {seller[0]}</p><p>Age: {seller[1]}</p><p>Aadhar Number: {seller[2]}</p><p>Pan Number: {seller[3]}</p><p>Owned Lands: {seller[4]}</p></div>);
-              sellerTable.push(
+            shhq = await this.state.RfpInstance.methods.getShqDetails(currentAddress).call();
+            console.log(shhq);
+            console.log(shhq[0]);
+            this.setState({name: shhq[0], age: shhq[1], aadharNumber: shhq[2], panNumber: shhq[3], rfpssOwned: shhq[4]});
+            //shqTable.push(<div><p>Name: {shhq[0]}</p><p>Age: {shhq[1]}</p><p>Aadhar Number: {shhq[2]}</p><p>Pan Number: {shhq[3]}</p><p>Owned Rfps: {shhq[4]}</p></div>);
+              shqTable.push(
               <Row>
                 <Col md="12">
                   <FormGroup>
@@ -134,7 +134,7 @@ class updateShq extends Component {
         } else if (!Number(this.state.age)) {
             alert("Your age must be a number");
         } else {
-            await this.state.LandInstance.methods.updateShq(
+            await this.state.RfpInstance.methods.updateShq(
                 this.state.name,
                 this.state.age,
                 this.state.aadharNumber,
@@ -145,7 +145,7 @@ class updateShq extends Component {
                     from: this.state.address,
                     gas: 2100000
                 }).then(response => {
-                    this.props.history.push("/Seller/sellerProfile");
+                    this.props.history.push("/Shq/shqProfile");
                 });
 
             //Reload
@@ -165,7 +165,7 @@ class updateShq extends Component {
     updatePan = event => (
         this.setState({ panNumber: event.target.value })
     )
-    updateOwnedLands = event => (
+    updateOwnedRfps = event => (
         this.setState({ rfpssOwned: event.target.value })
     )
 
@@ -191,13 +191,13 @@ class updateShq extends Component {
                             <Col md="8">
                                 <Card>
                                     <CardHeader>
-                                        <h5 className="title">Seller Profile</h5>
+                                        <h5 className="title">Shq Profile</h5>
                                         <h5 className="title">{verification}</h5>
 
                                     </CardHeader>
                                     <CardBody>
                                         <Form>
-                                            {sellerTable}
+                                            {shqTable}
                                             <Row>
                                                 <Col md="12">
                                                     <FormGroup>

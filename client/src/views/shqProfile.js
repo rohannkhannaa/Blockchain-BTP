@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Land from "../artifacts/Land.json"
+import Rfp from "../artifacts/Rfp.json"
 import getWeb3 from "../getWeb3"
 
 import '../index.css';
@@ -28,25 +28,25 @@ import {
 } from 'drizzle-react-components'
 
 const drizzleOptions = {
-    contracts: [Land]
+    contracts: [Rfp]
 }
 
-// var buyers = 0;
-// var sellers = 0;
-var seller;
-var sellerTable = [];
+// var agencys = 0;
+// var shhqs = 0;
+var shhq;
+var shqTable = [];
 var verification = [];
 
-class sellerProfile extends Component {
+class shqProfile extends Component {
     constructor(props){
         super(props)
 
         this.state = {
-            LandInstance: undefined,
+            RfpInstance: undefined,
             account: null,
             web3: null,
-            buyers: 0,
-            sellers: 0,
+            agencys: 0,
+            shhqs: 0,
             verified: false,
         }
     }
@@ -67,20 +67,20 @@ class sellerProfile extends Component {
             const currentAddress = await web3.currentProvider.selectedAddress;
             console.log(currentAddress);
             const networkId = await web3.eth.net.getId();
-            const deployedNetwork = Land.networks[networkId];
+            const deployedNetwork = Rfp.networks[networkId];
             const instance = new web3.eth.Contract(
-                Land.abi,
+                Rfp.abi,
                 deployedNetwork && deployedNetwork.address,
             );
 
-            this.setState({ LandInstance: instance, web3: web3, account: accounts[0] });
+            this.setState({ RfpInstance: instance, web3: web3, account: accounts[0] });
 
-            var seller_verify = await this.state.LandInstance.methods.isVerified(currentAddress).call();
-            console.log(seller_verify);
-            this.setState({verified: seller_verify})    
-            var not_verify = await this.state.LandInstance.methods.isRejected(currentAddress).call();
+            var shq_verify = await this.state.RfpInstance.methods.isVerified(currentAddress).call();
+            console.log(shq_verify);
+            this.setState({verified: shq_verify})    
+            var not_verify = await this.state.RfpInstance.methods.isRejected(currentAddress).call();
             console.log(not_verify);
-            if(seller_verify){
+            if(shq_verify){
               verification.push(<p id = "verified">Verified <i class="fas fa-user-check"></i></p>);
             }else if(not_verify){
               verification.push(<p  id = "rejected">Rejected <i class="fas fa-user-times"></i></p>);
@@ -88,12 +88,12 @@ class sellerProfile extends Component {
               verification.push(<p id = "unknown">Not Yet Verified <i class="fas fa-user-cog"></i></p>);
             }
 
-            seller = await this.state.LandInstance.methods.getShqDetails(currentAddress).call();
-            console.log(seller);
-            console.log(seller[0]);
+            shhq = await this.state.RfpInstance.methods.getShqDetails(currentAddress).call();
+            console.log(shhq);
+            console.log(shhq[0]);
 
-            //sellerTable.push(<div><p>Name: {seller[0]}</p><p>Age: {seller[1]}</p><p>Aadhar Number: {seller[2]}</p><p>Pan Number: {seller[3]}</p><p>Owned Lands: {seller[4]}</p></div>);
-              sellerTable.push(<>
+            //shqTable.push(<div><p>Name: {shhq[0]}</p><p>Age: {shhq[1]}</p><p>Aadhar Number: {shhq[2]}</p><p>Pan Number: {shhq[3]}</p><p>Owned Rfps: {shhq[4]}</p></div>);
+              shqTable.push(<>
               <Row>
                 <Col md="12">
                   <FormGroup>
@@ -113,7 +113,7 @@ class sellerProfile extends Component {
                     <Input
                       disabled
                       type="text"
-                      value={seller[0]}
+                      value={shhq[0]}
                     />
                   </FormGroup>
                 </Col>
@@ -126,7 +126,7 @@ class sellerProfile extends Component {
                     <Input
                       disabled
                       type="text"
-                      value={seller[1]}
+                      value={shhq[1]}
                     />
                   </FormGroup>
                 </Col>
@@ -139,7 +139,7 @@ class sellerProfile extends Component {
                     <Input
                     disabled
                     type="text"
-                    value={seller[2]}  
+                    value={shhq[2]}  
                     />
                   </FormGroup>
                 </Col>
@@ -151,7 +151,7 @@ class sellerProfile extends Component {
                     <Input
                     disabled
                     type="text"
-                    value={seller[3]}  
+                    value={shhq[3]}  
                     />
                   </FormGroup>
                 </Col>
@@ -187,23 +187,23 @@ class sellerProfile extends Component {
             <LoadingContainer>
                 
                 {/* <div >
-                    <h5>Seller Profile</h5>
+                    <h5>Shq Profile</h5>
                 
-                        {sellerTable}
+                        {shqTable}
         
                 </div> */}
                         <Row>
                             <Col md="8">
                                 <Card>
                                     <CardHeader>
-                                        <h5 className="title">Seller Profile</h5>
+                                        <h5 className="title">Shq Profile</h5>
                                         <h5 className="title">{verification}</h5>
 
                                     </CardHeader>
                                     <CardBody>
                                         <Form>
-                                            {sellerTable}
-                                            <Button href="/Seller/updateShq"  className="btn-fill" disabled={!this.state.verified} color="primary">
+                                            {shqTable}
+                                            <Button href="/Shq/updateShq"  className="btn-fill" disabled={!this.state.verified} color="primary">
                                             Edit Profile
                                       </Button>
                                         </Form>
@@ -222,4 +222,4 @@ class sellerProfile extends Component {
     }    
 }
 
-export default sellerProfile;
+export default shqProfile;

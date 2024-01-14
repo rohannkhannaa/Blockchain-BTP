@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Land from "../artifacts/Land.json";
+import Rfp from "../artifacts/Rfp.json";
 import getWeb3 from "../getWeb3";
 import { Line, Bar } from "react-chartjs-2";
 import '../index.css';
@@ -31,22 +31,22 @@ import "../card.css";
 
 
 const drizzleOptions = {
-  contracts: [Land]
+  contracts: [Rfp]
 }
 
 
 var verified;
 var row = [];
-var buyerarr = [];
-var sellerarr = [];
+var agencyarr = [];
+var shqarr = [];
 var reqsarr = [];
 
-class LIDashboard extends Component {
+class AdminDashboard extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            LandInstance: undefined,
+            RfpInstance: undefined,
             account: null,
             web3: null,
             verified: '',
@@ -68,20 +68,20 @@ class LIDashboard extends Component {
 
             const currentAddress = await web3.currentProvider.selectedAddress;
             const networkId = await web3.eth.net.getId();
-            const deployedNetwork = Land.networks[networkId];
+            const deployedNetwork = Rfp.networks[networkId];
             const instance = new web3.eth.Contract(
-                Land.abi,
+                Rfp.abi,
                 deployedNetwork && deployedNetwork.address,
             );
 
-            this.setState({ LandInstance: instance, web3: web3, account: accounts[0] });
+            this.setState({ RfpInstance: instance, web3: web3, account: accounts[0] });
 
-            var verified = await this.state.LandInstance.methods.isAdmin(currentAddress).call();
+            var verified = await this.state.RfpInstance.methods.isAdmin(currentAddress).call();
             this.setState({ verified: verified });
 
-            sellerarr.push(<ContractData contract="Land" method="getShqCount" />);
-            buyerarr.push(<ContractData contract="Land" method="getAgencyCount" />);
-            reqsarr.push(<ContractData contract="Land" method="getBidCount" />);
+            shqarr.push(<ContractData contract="Rfp" method="getShqCount" />);
+            agencyarr.push(<ContractData contract="Rfp" method="getAgencyCount" />);
+            reqsarr.push(<ContractData contract="Rfp" method="getBidCount" />);
 
 
         } catch (error) {
@@ -141,7 +141,7 @@ class LIDashboard extends Component {
                                         <div class="icon-section">
                                             <i class="fa fa-users" aria-hidden="true"></i><br />
                                             <medium>Total Development Agencies</medium><br />
-                                            <p style={{color : 'white'}}> {buyerarr} </p>
+                                            <p style={{color : 'white'}}> {agencyarr} </p>
                                         </div>
                                         <div class="detail-section"><br />
                                         </div>
@@ -164,7 +164,7 @@ class LIDashboard extends Component {
                                         <div class="icon-section">
                                             <i class="fa fa-users" aria-hidden="true"></i><br />
                                             <medium>Service Headquarter Team Size</medium><br />
-                                            <p style={{color : 'white'}}>{sellerarr}</p>
+                                            <p style={{color : 'white'}}>{shqarr}</p>
                                         </div>
                                         <div class="detail-section"><br />
                                         </div>
@@ -181,7 +181,7 @@ class LIDashboard extends Component {
                                     <CardBody>
                                         <div className="chart-area">
 
-                                            <Button href="/LI/BuyerInfo" className="btn-fill btn-dark" color="primary">
+                                            <Button href="/Adminn/AgencyInfo" className="btn-fill btn-dark" color="primary">
                                             Verify Development Agency
                 </Button>
                                         </div>
@@ -196,7 +196,7 @@ class LIDashboard extends Component {
                                     <CardBody>
                                         <div className="chart-area">
 
-                                            <Button href="/LI/TransactionInfo" className="btn btn-dark" color="primary">
+                                            <Button href="/Adminn/TransactionInfo" className="btn btn-dark" color="primary">
                                                 View Details
                         </Button>
                                         </div>
@@ -211,7 +211,7 @@ class LIDashboard extends Component {
                                     <CardBody>
                                         <div className="chart-area">
 
-                                            <Button href="/LI/SellerInfo" className="btn btn-dark" color="primary">
+                                            <Button href="/Adminn/ShqInfo" className="btn btn-dark" color="primary">
                                             Verify SHQ Members
                 </Button>
                                         </div>
@@ -229,4 +229,4 @@ class LIDashboard extends Component {
     }
 }
 
-export default LIDashboard;
+export default AdminDashboard;

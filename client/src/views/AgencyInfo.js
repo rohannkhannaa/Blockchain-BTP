@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Land from "../artifacts/Land.json";
+import Rfp from "../artifacts/Rfp.json";
 import getWeb3 from "../getWeb3";
 import { Line, Bar } from "react-chartjs-2";
 import '../index.css';
@@ -36,12 +36,12 @@ import {
 
 import { emailjs } from 'emailjs-com';
 const drizzleOptions = {
-    contracts: [Land]
+    contracts: [Rfp]
 }
 
-// var buyers = 0;
-// var sellers = 0;
-var buyerTable = [];
+// var agencys = 0;
+// var shhqs = 0;
+var agencyTable = [];
 var completed = true;
 
 function sendMail(email, name){
@@ -50,7 +50,7 @@ function sendMail(email, name){
     var tempParams = {
         from_name: email,
         to_name: name,
-        function: 'request and buy any land/property',
+        function: 'request and buy any rfpp/property',
     };
     
     window.emailjs.send('service_vrxa1ak', 'template_zhc8m9h', tempParams)
@@ -59,15 +59,15 @@ function sendMail(email, name){
     })
 }
 
-class BuyerInfo extends Component {
+class AgencyInfo extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            LandInstance: undefined,
+            RfpInstance: undefined,
             account: null,
             web3: null,
-            buyers: 0,
+            agencys: 0,
             verified: '',
         }
     }
@@ -77,7 +77,7 @@ class BuyerInfo extends Component {
         //console.log("Hello");
         //console.log(item);
 
-        await this.state.LandInstance.methods.verifyAgency(
+        await this.state.RfpInstance.methods.verifyAgency(
             item
         ).send({
             from: this.state.account,
@@ -89,14 +89,14 @@ class BuyerInfo extends Component {
 
     }
     
-    NotverifyBuyer = (item, email, name) => async() => {
+    NotverifyAgency = (item, email, name) => async() => {
         // alert('Before mail');
         sendMail(email, name);
         // alert('After mail');
 
         await new Promise(resolve => setTimeout(resolve, 10000));
 
-        await this.state.LandInstance.methods.rejectAgency(
+        await this.state.RfpInstance.methods.rejectAgency(
             item
         ).send({
             from: this.state.account,
@@ -122,46 +122,46 @@ class BuyerInfo extends Component {
             const currentAddress = await web3.currentProvider.selectedAddress;
             //console.log(currentAddress);
             const networkId = await web3.eth.net.getId();
-            const deployedNetwork = Land.networks[networkId];
+            const deployedNetwork = Rfp.networks[networkId];
             const instance = new web3.eth.Contract(
-                Land.abi,
+                Rfp.abi,
                 deployedNetwork && deployedNetwork.address,
             );
 
-            this.setState({ LandInstance: instance, web3: web3, account: accounts[0] });
+            this.setState({ RfpInstance: instance, web3: web3, account: accounts[0] });
 
 
-            var buyersCount = await this.state.LandInstance.methods.getAgencyCount().call();
-            console.log(buyersCount);
+            var agencysCount = await this.state.RfpInstance.methods.getAgencyCount().call();
+            console.log(agencysCount);
            
 
-            var buyersMap = [];
-            buyersMap = await this.state.LandInstance.methods.getAgency().call();
-            //console.log(buyersMap);
+            var agencysMap = [];
+            agencysMap = await this.state.RfpInstance.methods.getAgency().call();
+            //console.log(agencysMap);
 
-            var verified = await this.state.LandInstance.methods.isAdmin(currentAddress).call();
+            var verified = await this.state.RfpInstance.methods.isAdmin(currentAddress).call();
             //console.log(verified);
             this.setState({ verified: verified });
 
-            for (let i = 0; i < buyersCount; i++) {
+            for (let i = 0; i < agencysCount; i++) {
                 // var i =3;
-                var buyer = await this.state.LandInstance.methods.getAgencyDetails(buyersMap[i]).call();
+                var agency = await this.state.RfpInstance.methods.getAgencyDetails(agencysMap[i]).call();
 
-                var buyer_verify = await this.state.LandInstance.methods.isVerified(buyersMap[i]).call();
-                console.log(buyer_verify);
-                buyer.verified = buyer_verify;
+                var agency_verify = await this.state.RfpInstance.methods.isVerified(agencysMap[i]).call();
+                console.log(agency_verify);
+                agency.verified = agency_verify;
                 
-                var not_verify = await this.state.LandInstance.methods.isRejected(buyersMap[i]).call();
+                var not_verify = await this.state.RfpInstance.methods.isRejected(agencysMap[i]).call();
                 console.log(not_verify);
-                buyerTable.push(<tr><td>{i + 1}</td><td>{buyersMap[i]}</td><td>{buyer[0]}</td><td>{buyer[4]}</td><td>{buyer[1]}</td><td>{buyer[6]}</td>
-                    <td>{buyer.verified.toString()==='true' ? ('Verified'):('Rejected')}</td>
+                agencyTable.push(<tr><td>{i + 1}</td><td>{agencysMap[i]}</td><td>{agency[0]}</td><td>{agency[4]}</td><td>{agency[1]}</td><td>{agency[6]}</td>
+                    <td>{agency.verified.toString()==='true' ? ('Verified'):('Rejected/Pending')}</td>
                     <td>
-                        <Button onClick={this.verifyAgency(buyersMap[i])} disabled={buyer_verify || not_verify} className="button-vote">
+                        <Button onClick={this.verifyAgency(agencysMap[i])} disabled={agency_verify || not_verify} className="button-vote">
                             Verify
                     </Button>
                     </td>
                     <td>
-                        <Button onClick={this.NotverifyBuyer(buyersMap[i], buyer[4], buyer[0])} disabled={buyer_verify || not_verify} className="btn btn-danger">
+                        <Button onClick={this.NotverifyAgency(agencysMap[i], agency[4], agency[0])} disabled={agency_verify || not_verify} className="btn btn-danger">
                            Reject
                     </Button>
                     </td>
@@ -241,7 +241,7 @@ class BuyerInfo extends Component {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {buyerTable}
+                                                {agencyTable}
                                             </tbody>
 
                                         </Table>
@@ -257,4 +257,4 @@ class BuyerInfo extends Component {
     }
 }
 
-export default BuyerInfo;
+export default AgencyInfo;

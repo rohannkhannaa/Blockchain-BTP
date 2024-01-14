@@ -3,7 +3,7 @@ import './index.css';
 import history from './history';
 import { Redirect } from 'react-router-dom';
 import getWeb3 from "./getWeb3"
-import LandContract from "./artifacts/Land.json"
+import RfpContract from "./artifacts/Rfp.json"
 import { Button } from "reactstrap";
 
 export default class Login extends Component {
@@ -12,9 +12,9 @@ export default class Login extends Component {
         this.state = {
             role: null,
             redirect: null,
-            landInspector: '',
-            seller: '',
-            buyer: '',
+            adminn: '',
+            shhq: '',
+            agency: '',
         }
         this.handleInputChange = this.handleInputChange.bind(this);
     }
@@ -32,23 +32,23 @@ export default class Login extends Component {
             const accounts = await web3.eth.getAccounts();
 
             const networkId = await web3.eth.net.getId();
-            const deployedNetwork = LandContract.networks[networkId];
+            const deployedNetwork = RfpContract.networks[networkId];
             const instance = new web3.eth.Contract(
-                LandContract.abi,
+                RfpContract.abi,
                 deployedNetwork && deployedNetwork.address,
             );
 
             const currentAddress = await web3.currentProvider.selectedAddress;
-            this.setState({ LandInstance: instance, web3: web3, account: accounts[0] });
-            var seller = await this.state.LandInstance.methods.isAgency(currentAddress).call();
-            console.log(seller);
-            this.setState({ seller: seller });
-            var buyer = await this.state.LandInstance.methods.isShq(currentAddress).call();
-            console.log(buyer);
-            this.setState({ buyer: buyer });
-            var landInspector = await this.state.LandInstance.methods.isAdmin(currentAddress).call();
-            console.log(landInspector);
-            this.setState({ landInspector: landInspector });
+            this.setState({ RfpInstance: instance, web3: web3, account: accounts[0] });
+            var shhq = await this.state.RfpInstance.methods.isAgency(currentAddress).call();
+            console.log(shhq);
+            this.setState({ shhq: shhq });
+            var agency = await this.state.RfpInstance.methods.isShq(currentAddress).call();
+            console.log(agency);
+            this.setState({ agency: agency });
+            var adminn = await this.state.RfpInstance.methods.isAdmin(currentAddress).call();
+            console.log(adminn);
+            this.setState({ adminn: adminn });
 
         } catch (error) {
             alert(
@@ -71,7 +71,7 @@ export default class Login extends Component {
     }
 
     render() {
-        if (this.state.seller || this.state.buyer || this.state.landInspector) {
+        if (this.state.shhq || this.state.agency || this.state.adminn) {
             return (
 
                 <div className="bodyC">
@@ -83,9 +83,9 @@ export default class Login extends Component {
                     <div className="auth-wrapper">
                         <div className="auth-inner">
                             <h1>You are already registered.</h1>
-                            <Button href="/Seller/SellerDashboard" disabled={!this.state.seller} className="btn-block" style={{margin: "2px", backgroundColor: "peru"}} >Service Headquarter Dashboard</Button>
-                            <br/><Button href="/admin/dashboard" disabled={!this.state.buyer} className="btn-block" style={{margin: "2px", backgroundColor: "peru"}}>Development Agency Dashboard</Button>
-                            <br/><Button href="/LI/LIdashboard" disabled={!this.state.landInspector} className="btn-block" style={{margin: "2px", backgroundColor: "peru"}}>Admin Dashboard</Button>
+                            <Button href="/Shq/ShqDashboard" disabled={!this.state.shhq} className="btn-block" style={{margin: "2px", backgroundColor: "peru"}} >Service Headquarter Dashboard</Button>
+                            <br/><Button href="/admin/dashboard" disabled={!this.state.agency} className="btn-block" style={{margin: "2px", backgroundColor: "peru"}}>Development Agency Dashboard</Button>
+                            <br/><Button href="/Adminn/AdminDashboard" disabled={!this.state.adminn} className="btn-block" style={{margin: "2px", backgroundColor: "peru"}}>Admin Dashboard</Button>
                         </div>
                     </div>
                 </div>
@@ -115,8 +115,8 @@ export default class Login extends Component {
                                 <label class="control-label" for="Company" style={{ fontSize: "18px", padding: "2px" }}>Select Role</label>
                                 <select id="Company" class="form-control" name="Company" onChange={this.handleInputChange}>
                                     <option selected="true" disabled="disabled">Select Role</option>
-                                    <option value="Buyer">Development Agency</option>
-                                    <option value="Seller">Service Headquarter</option>
+                                    <option value="Agency">Development Agency</option>
+                                    <option value="Shq">Service Headquarter</option>
                                 </select>
                             </div>
 

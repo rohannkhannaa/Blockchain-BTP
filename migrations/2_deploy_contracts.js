@@ -1,5 +1,5 @@
-const Land = artifacts.require("Land");
+const Rfp = artifacts.require("Rfp");
 
 module.exports = function(deployer) {
-  deployer.deploy(Land);
+  deployer.deploy(Rfp);
 };

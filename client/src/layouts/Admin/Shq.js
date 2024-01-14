@@ -8,15 +8,15 @@ import PerfectScrollbar from "perfect-scrollbar";
 import AdminNavbar from "../../components/Navbars/AdminNavbar";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import FixedPlugin from "../../components/FixedPlugin/FixedPlugin";
-import SDash from  "../../views/SellerDashboard";
-import routes from "../../routeseller";
+import SDash from  "../../views/ShqDashboard";
+import routes from "../../routeshq";
 import Footer from "../../components/Footer/Footer";
 import logo from "../../assets/img/react-logo.png";
 import { BackgroundColorContext } from "../../contexts/BackgroundColorContext";
 
 var ps;
 
-function Seller(props) {
+function Shq(props) {
   const location = useLocation();
   const mainPanelRef = React.useRef(null);
   const [sidebarOpened, setsidebarOpened] = React.useState(
@@ -63,7 +63,7 @@ function Seller(props) {
   };
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
-      if (prop.layout === "/Seller") {
+      if (prop.layout === "/Shq") {
         return (
           <Route
             path={prop.layout + prop.path}
@@ -94,7 +94,7 @@ function Seller(props) {
               routes={routes}
               logo={{
                 outterLink: "#",
-                text: "Land Registration",
+                text: "Rfp Registration",
                 imgSrc: logo,
               }}
               toggleSidebar={toggleSidebar}
@@ -107,7 +107,7 @@ function Seller(props) {
               />
               <Switch>
                 {getRoutes(routes)}
-                <Redirect from="*" to="/Seller/SellerDashboard" />
+                <Redirect from="*" to="/Shq/ShqDashboard" />
               </Switch>
               <Footer fluid />
 
@@ -120,4 +120,4 @@ function Seller(props) {
   );
 }
 
-export default Seller;
+export default Shq;

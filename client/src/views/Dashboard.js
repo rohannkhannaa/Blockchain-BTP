@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
-import Land from "../artifacts/Land.json";
+import Rfp from "../artifacts/Rfp.json";
 import getWeb3 from "../getWeb3";
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { DrizzleProvider } from 'drizzle-react';
@@ -36,7 +36,7 @@ import "../card.css";
 
 
 const drizzleOptions = {
-  contracts: [Land]
+  contracts: [Rfp]
 }
 
 
@@ -44,7 +44,7 @@ var row = [];
 var countarr = [];
 var userarr = [];
 var reqsarr = [];
-var landOwner = [];
+var rfpOwner = [];
 // var requested = false;
 
 class Dashboard extends Component {
@@ -52,7 +52,7 @@ class Dashboard extends Component {
     super(props)
 
     this.state = {
-      LandInstance: undefined,
+      RfpInstance: undefined,
       account: null,
       web3: null,
       count: 0,
@@ -60,15 +60,15 @@ class Dashboard extends Component {
     }
   }
 
-  requestBid = (seller_address, land_id) => async () => {
+  requestBid = (shq_address, rfp_idd) => async () => {
 
-    console.log(seller_address);
-    console.log(land_id);
+    console.log(shq_address);
+    console.log(rfp_idd);
     // this.setState({requested: true});
     // requested = true;
-    await this.state.LandInstance.methods.requestBid(
-      seller_address,
-      land_id
+    await this.state.RfpInstance.methods.requestBid(
+      shq_address,
+      rfp_idd
     ).send({
       from: this.state.account,
       gas: 2100000
@@ -96,34 +96,34 @@ class Dashboard extends Component {
       const accounts = await web3.eth.getAccounts();
 
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = Land.networks[networkId];
+      const deployedNetwork = Rfp.networks[networkId];
       const instance = new web3.eth.Contract(
-        Land.abi,
+        Rfp.abi,
         deployedNetwork && deployedNetwork.address,
       );
 
-      this.setState({ LandInstance: instance, web3: web3, account: accounts[0] });
+      this.setState({ RfpInstance: instance, web3: web3, account: accounts[0] });
 
       const currentAddress = await web3.currentProvider.selectedAddress;
       console.log(currentAddress);
-      var registered = await this.state.LandInstance.methods.isShq(currentAddress).call();
+      var registered = await this.state.RfpInstance.methods.isShq(currentAddress).call();
       console.log(registered);
       this.setState({ registered: registered });
-      var count = await this.state.LandInstance.methods.getRfpCount().call();
+      var count = await this.state.RfpInstance.methods.getRfpCount().call();
       count = parseInt(count);
       console.log(typeof (count));
       console.log(count);
-      var verified = await this.state.LandInstance.methods.isVerified(currentAddress).call();
+      var verified = await this.state.RfpInstance.methods.isVerified(currentAddress).call();
       console.log(verified);
 
-      // var countbuyer = await this.state.LandInstance.methods.getAgencyCount().call();
-      // var countseller = await this.state.LandInstance.methods.getShqCount().call();
-      // userarr.push(<p>{countseller.toString()}</p>);
+      // var countagency = await this.state.RfpInstance.methods.getAgencyCount().call();
+      // var countshq = await this.state.RfpInstance.methods.getShqCount().call();
+      // userarr.push(<p>{countshq.toString()}</p>);
 
       // countarr.push(<p>{count.toString()}</p>);
-      countarr.push(<ContractData contract="Land" method="getRfpCount" />);
-      userarr.push(<ContractData contract="Land" method="getShqCount" />);
-      reqsarr.push(<ContractData contract="Land" method="getBidCount" />);
+      countarr.push(<ContractData contract="Rfp" method="getRfpCount" />);
+      userarr.push(<ContractData contract="Rfp" method="getShqCount" />);
+      reqsarr.push(<ContractData contract="Rfp" method="getBidCount" />);
 
       var rowsArea = [];
       var rowsCity = [];
@@ -135,23 +135,24 @@ class Dashboard extends Component {
 
       var dict = {}
       for (var i = 1; i < count + 1; i++) {
-        var address = await this.state.LandInstance.methods.getLandOwner(i).call();
+        var address = await this.state.RfpInstance.methods.getRfpOwner(i).call();
         dict[i] = address;
       }
 
       console.log(dict[1]);
 
       for (var i = 1; i < count + 1; i++) {
-        rowsArea.push(<ContractData contract="Land" method="getArea" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
-        rowsCity.push(<ContractData contract="Land" method="getCity" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
-        rowsState.push(<ContractData contract="Land" method="getState" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
-        rowsPrice.push(<ContractData contract="Land" method="getPrice" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
-        rowsPID.push(<ContractData contract="Land" method="getPID" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
-        rowsSurvey.push(<ContractData contract="Land" method="getSurveyNumber" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
+        rowsArea.push(<ContractData contract="Rfp" method="getArea" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
+        rowsCity.push(<ContractData contract="Rfp" method="getCity" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
+        rowsState.push(<ContractData contract="Rfp" method="getState" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
+        rowsPrice.push(<ContractData contract="Rfp" method="getPrice" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
+        rowsPID.push(<ContractData contract="Rfp" method="getPID" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
+        rowsSurvey.push(<ContractData contract="Rfp" method="getSurveyNumber" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
       }
 
       for (var i = 0; i < count; i++) {
-        var requested = await this.state.LandInstance.methods.isRequested(i + 1).call();
+        console.log("Here"+count);
+        var requested = await this.state.RfpInstance.methods.isRequested(i + 1).call();
         // console.log(requested);
 
         row.push(<tr><td>{i + 1}</td><td>{rowsArea[i]}</td><td>{rowsCity[i]}</td><td>{rowsState[i]}</td><td>{rowsPrice[i]}</td><td>{rowsSurvey[i]}</td>
@@ -266,7 +267,7 @@ class Dashboard extends Component {
                 <CardBody>
                   <div className="chart-area">
 
-                    <Button href="/admin/buyerProfile" className="btn-fill btn-dark" color="primary">
+                    <Button href="/admin/agencyProfile" className="btn-fill btn-dark" color="primary">
                       View Profile
                 </Button>
                   </div>
@@ -281,7 +282,7 @@ class Dashboard extends Component {
                 <CardBody>
                   <div className="chart-area">
 
-                    <Button href="/admin/OwnedLands" className="btn-fill btn-dark" color="primary">
+                    <Button href="/admin/OwnedRfps" className="btn-fill btn-dark" color="primary">
                       View contracts assigned
                 </Button>
                   </div>
@@ -291,7 +292,7 @@ class Dashboard extends Component {
             {/* <Col lg="4">
               <Card>
                 <CardHeader>
-                  <h5 className="title">Make Payments for Approved Land Requests</h5>
+                  <h5 className="title">Make Payments for Approved Rfp Requests</h5>
                 </CardHeader>
                 <CardBody>
                   <div className="chart-area">

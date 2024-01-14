@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Land from "../artifacts/Land.json";
+import Rfp from "../artifacts/Rfp.json";
 import getWeb3 from "../getWeb3";
 import "../index.css";
 import { FormControl } from "react-bootstrap";
@@ -28,11 +28,11 @@ import {
 } from 'drizzle-react-components'
 
 const drizzleOptions = {
-    contracts: [Land]
+    contracts: [Rfp]
 }
 
-var buyer;
-var buyerTable = [];
+var agency;
+var agencyTable = [];
 var verification = [];
 
 class updateAgency extends Component {
@@ -40,12 +40,12 @@ class updateAgency extends Component {
         super(props)
 
         this.state = {
-            LandInstance: undefined,
+            RfpInstance: undefined,
             account: null,
             web3: null,
             address: '',
-            buyers: 0,
-            sellers: 0,
+            agencys: 0,
+            shhqs: 0,
             name: '',
             age: '',
             city: '',
@@ -72,18 +72,18 @@ class updateAgency extends Component {
             const currentAddress = await web3.currentProvider.selectedAddress;
             console.log(currentAddress);
             const networkId = await web3.eth.net.getId();
-            const deployedNetwork = Land.networks[networkId];
+            const deployedNetwork = Rfp.networks[networkId];
             const instance = new web3.eth.Contract(
-                Land.abi,
+                Rfp.abi,
                 deployedNetwork && deployedNetwork.address,
             );
 
-            this.setState({ LandInstance: instance, web3: web3, account: accounts[0] });
+            this.setState({ RfpInstance: instance, web3: web3, account: accounts[0] });
             this.setState({address: currentAddress});
-            var buyer_verify = await this.state.LandInstance.methods.isVerified(currentAddress).call();
+            var agency_verify = await this.state.RfpInstance.methods.isVerified(currentAddress).call();
                 
-            var not_verify = await this.state.LandInstance.methods.isRejected(currentAddress).call();
-            if(buyer_verify){
+            var not_verify = await this.state.RfpInstance.methods.isRejected(currentAddress).call();
+            if(agency_verify){
               verification.push(<p id = "verified">Verified <i class="fas fa-user-check"></i></p>);
             }else if(not_verify){
               verification.push(<p  id = "rejected">Rejected <i class="fas fa-user-times"></i></p>);
@@ -91,11 +91,11 @@ class updateAgency extends Component {
               verification.push(<p id = "unknown">Not Yet Verified <i class="fas fa-user-cog"></i></p>);
             }
 
-            buyer = await this.state.LandInstance.methods.getAgencyDetails(currentAddress).call();
-            console.log(buyer);
-            console.log(buyer[0]);
-            this.setState({name: buyer[0], age: buyer[5], city: buyer[1], email: buyer[4], aadharNumber: buyer[6], panNumber: buyer[2]});
-            buyerTable.push(
+            agency = await this.state.RfpInstance.methods.getAgencyDetails(currentAddress).call();
+            console.log(agency);
+            console.log(agency[0]);
+            this.setState({name: agency[0], age: agency[5], city: agency[1], email: agency[4], aadharNumber: agency[6], panNumber: agency[2]});
+            agencyTable.push(
             <Row>
                 <Col md="12">
                   <FormGroup>
@@ -129,7 +129,7 @@ class updateAgency extends Component {
           alert("Your age must be a number");
       } 
       else{
-          await this.state.LandInstance.methods.updateAgency(
+          await this.state.RfpInstance.methods.updateAgency(
               this.state.name,
               this.state.age,
               this.state.city,
@@ -141,7 +141,7 @@ class updateAgency extends Component {
                   from : this.state.address,
                   gas : 2100000
               }).then(response => {
-                  this.props.history.push("/admin/buyerProfile");
+                  this.props.history.push("/admin/agencyProfile");
               });
 
           //Reload
@@ -196,7 +196,7 @@ class updateAgency extends Component {
                       </CardHeader>
                       <CardBody>
                         <Form>
-                          {buyerTable}
+                          {agencyTable}
                           <Row>
                             <Col md="12">
                               <FormGroup>

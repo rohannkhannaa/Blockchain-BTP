@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Line, Bar } from "react-chartjs-2";
-import LandContract from "../artifacts/Land.json";
-import Land from "../artifacts/Land.json";
+import RfpContract from "../artifacts/Rfp.json";
+import Rfp from "../artifacts/Rfp.json";
 import getWeb3 from "../getWeb3";
 import { DrizzleProvider } from 'drizzle-react';
 import { Spinner  } from 'react-bootstrap';
@@ -32,7 +32,7 @@ import {
 
 
 const drizzleOptions = {
-  contracts: [Land]
+  contracts: [Rfp]
 }
 
 
@@ -40,12 +40,12 @@ var verified;
 var row = [];
 
 
-class OwnedLands extends Component {
+class OwnedRfps extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      LandInstance: undefined,
+      RfpInstance: undefined,
       account: null,
       web3: null,
       flag: null,
@@ -77,23 +77,23 @@ class OwnedLands extends Component {
       const accounts = await web3.eth.getAccounts();
 
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = Land.networks[networkId];
+      const deployedNetwork = Rfp.networks[networkId];
       const instance = new web3.eth.Contract(
-        Land.abi,
+        Rfp.abi,
         deployedNetwork && deployedNetwork.address,
       );
 
       const currentAddress = await web3.currentProvider.selectedAddress;
       console.log(currentAddress);
-      this.setState({ LandInstance: instance, web3: web3, account: accounts[0] });
-      verified = await this.state.LandInstance.methods.isVerified(currentAddress).call();
+      this.setState({ RfpInstance: instance, web3: web3, account: accounts[0] });
+      verified = await this.state.RfpInstance.methods.isVerified(currentAddress).call();
       console.log(verified);
       this.setState({ verified: verified });
-      var registered = await this.state.LandInstance.methods.isShq(currentAddress).call();
+      var registered = await this.state.RfpInstance.methods.isShq(currentAddress).call();
       console.log(registered);
       this.setState({ registered: registered });
 
-      var count = await this.state.LandInstance.methods.getRfpCount().call();
+      var count = await this.state.RfpInstance.methods.getRfpCount().call();
       count = parseInt(count);
       console.log(typeof (count));
       console.log(count);
@@ -109,17 +109,17 @@ class OwnedLands extends Component {
       
 
       for (var i = 1; i < count + 1; i++) {
-        rowsArea.push(<ContractData contract="Land" method="getArea" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
-        rowsCity.push(<ContractData contract="Land" method="getCity" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
-        rowsState.push(<ContractData contract="Land" method="getState" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
-        rowsPrice.push(<ContractData contract="Land" method="getPrice" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
-        rowsPID.push(<ContractData contract="Land" method="getPID" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
-        rowsSurvey.push(<ContractData contract="Land" method="getSurveyNumber" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
+        rowsArea.push(<ContractData contract="Rfp" method="getArea" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
+        rowsCity.push(<ContractData contract="Rfp" method="getCity" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
+        rowsState.push(<ContractData contract="Rfp" method="getState" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
+        rowsPrice.push(<ContractData contract="Rfp" method="getPrice" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
+        rowsPID.push(<ContractData contract="Rfp" method="getPID" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
+        rowsSurvey.push(<ContractData contract="Rfp" method="getSurveyNumber" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
       }
     
 
       for (var i = 0; i < count; i++) {
-        var owner = await this.state.LandInstance.methods.getLandOwner(i+1).call();
+        var owner = await this.state.RfpInstance.methods.getRfpOwner(i+1).call();
         console.log(owner.toLowerCase());
         console.log(currentAddress);
         if(owner.toLowerCase() == currentAddress){
@@ -216,4 +216,4 @@ class OwnedLands extends Component {
   }
 }
 
-export default OwnedLands;
+export default OwnedRfps;

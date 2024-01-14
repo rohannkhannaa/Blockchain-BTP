@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Land from "../artifacts/Land.json";
+import Rfp from "../artifacts/Rfp.json";
 import getWeb3 from "../getWeb3";
 import "../index.css";
 import { FormControl } from "react-bootstrap";
@@ -28,23 +28,23 @@ import {
 } from 'drizzle-react-components'
 
 const drizzleOptions = {
-    contracts: [Land]
+    contracts: [Rfp]
 }
 
-var buyer;
-var buyerTable = [];
+var agency;
+var agencyTable = [];
 var verification = [];
 
-class buyerProfile extends Component {
+class agencyProfile extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            LandInstance: undefined,
+            RfpInstance: undefined,
             account: null,
             web3: null,
-            buyers: 0,
-            sellers: 0,
+            agencys: 0,
+            shhqs: 0,
             verified: '',
         }
     }
@@ -65,18 +65,18 @@ class buyerProfile extends Component {
             const currentAddress = await web3.currentProvider.selectedAddress;
             console.log(currentAddress);
             const networkId = await web3.eth.net.getId();
-            const deployedNetwork = Land.networks[networkId];
+            const deployedNetwork = Rfp.networks[networkId];
             const instance = new web3.eth.Contract(
-                Land.abi,
+                Rfp.abi,
                 deployedNetwork && deployedNetwork.address,
             );
 
-            this.setState({ LandInstance: instance, web3: web3, account: accounts[0] });
+            this.setState({ RfpInstance: instance, web3: web3, account: accounts[0] });
             
-            var buyer_verify = await this.state.LandInstance.methods.isVerified(currentAddress).call();
-            this.setState({verified: buyer_verify});     
-            var not_verify = await this.state.LandInstance.methods.isRejected(currentAddress).call();
-            if(buyer_verify){
+            var agency_verify = await this.state.RfpInstance.methods.isVerified(currentAddress).call();
+            this.setState({verified: agency_verify});     
+            var not_verify = await this.state.RfpInstance.methods.isRejected(currentAddress).call();
+            if(agency_verify){
               verification.push(<p id = "verified">Verified <i class="fas fa-user-check"></i></p>);
             }else if(not_verify){
               verification.push(<p  id = "rejected">Rejected <i class="fas fa-user-times"></i></p>);
@@ -84,11 +84,11 @@ class buyerProfile extends Component {
               verification.push(<p id = "unknown">Not Yet Verified <i class="fas fa-user-cog"></i></p>);
             }
 
-            buyer = await this.state.LandInstance.methods.getAgencyDetails(currentAddress).call();
-            console.log(buyer);
-            console.log(buyer[0]);
+            agency = await this.state.RfpInstance.methods.getAgencyDetails(currentAddress).call();
+            console.log(agency);
+            console.log(agency[0]);
 
-            buyerTable.push(<>
+            agencyTable.push(<>
             <Row>
                 <Col md="12">
                   <FormGroup>
@@ -108,7 +108,7 @@ class buyerProfile extends Component {
                     <Input
                       disabled
                       type="text"
-                      value={buyer[0]}
+                      value={agency[0]}
                     />
                   </FormGroup>
                 </Col>
@@ -121,7 +121,7 @@ class buyerProfile extends Component {
                     <Input
                       disabled
                       type="text"
-                      value={buyer[5]}
+                      value={agency[5]}
                     />
                   </FormGroup>
                 </Col>
@@ -134,7 +134,7 @@ class buyerProfile extends Component {
                     <Input
                       disabled
                       type="text"
-                      value={buyer[4]}
+                      value={agency[4]}
                     />
                   </FormGroup>
                 </Col>
@@ -146,7 +146,7 @@ class buyerProfile extends Component {
                     <Input
                       disabled
                       type="text"
-                      value={buyer[1]}
+                      value={agency[1]}
                     />
                   </FormGroup>
                 </Col>
@@ -158,7 +158,7 @@ class buyerProfile extends Component {
                     <Input
                       disabled
                       type="text"
-                      value={buyer[6]}
+                      value={agency[6]}
                     />
                   </FormGroup>
                 </Col>
@@ -170,7 +170,7 @@ class buyerProfile extends Component {
                     <Input
                     disabled
                     type="text"
-                    value={buyer[2]}  
+                    value={agency[2]}  
                     />
                   </FormGroup>
                 </Col>
@@ -179,7 +179,7 @@ class buyerProfile extends Component {
                 <Col md="12">
                   <FormGroup>
                     <label>Your Aadhar Document</label>
-                    <div class="post-meta"><span class="timestamp"> <a href={`https://ipfs.io/ipfs/${buyer[3]}`} target="_blank">Here</a></span></div>
+                    <div class="post-meta"><span class="timestamp"> <a href={`https://ipfs.io/ipfs/${agency[3]}`} target="_blank">Here</a></span></div>
                   </FormGroup>
                 </Col>
               </Row> */}
@@ -222,7 +222,7 @@ class buyerProfile extends Component {
                                     </CardHeader>
                                     <CardBody>
                                         <Form>
-                                            {buyerTable}
+                                            {agencyTable}
                                         </Form>
                                         <Button href="/admin/updateAgency"  className="btn-fill btn-dark" disabled={!this.state.verified} color="primary">
                                             Edit Profile
@@ -242,4 +242,4 @@ class buyerProfile extends Component {
     }
 }
 
-export default buyerProfile;
+export default agencyProfile;

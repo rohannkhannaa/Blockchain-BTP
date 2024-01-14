@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Land from "../artifacts/Land.json";
+import Rfp from "../artifacts/Rfp.json";
 import getWeb3 from "../getWeb3";
 import { Line, Bar } from "react-chartjs-2";
 import '../index.css';
@@ -36,11 +36,11 @@ import {
 
 
 const drizzleOptions = {
-    contracts: [Land]
+    contracts: [Rfp]
 }
 
 
-var landTable = [];
+var rfpTable = [];
 var completed = true;
 
 class TransactionInfo extends Component {
@@ -48,16 +48,16 @@ class TransactionInfo extends Component {
         super(props)
 
         this.state = {
-            LandInstance: undefined,
+            RfpInstance: undefined,
             account: null,
             web3: null,
             verified: '',
         }
     }
 
-    landTransfer = (rfpssId, newOwner) => async () => {
+    rfpTransfer = (rfpssId, newOwner) => async () => {
         
-        await this.state.LandInstance.methods.RfpOwnershipTransfer(
+        await this.state.RfpInstance.methods.RfpOwnershipTransfer(
             rfpssId, newOwner
         ).send({
             from : this.state.account,
@@ -91,19 +91,19 @@ class TransactionInfo extends Component {
             const currentAddress = await web3.currentProvider.selectedAddress;
             //console.log(currentAddress);
             const networkId = await web3.eth.net.getId();
-            const deployedNetwork = Land.networks[networkId];
+            const deployedNetwork = Rfp.networks[networkId];
             const instance = new web3.eth.Contract(
-                Land.abi,
+                Rfp.abi,
                 deployedNetwork && deployedNetwork.address,
             );
 
-            this.setState({ LandInstance: instance, web3: web3, account: accounts[0] });
+            this.setState({ RfpInstance: instance, web3: web3, account: accounts[0] });
             
-            var verified = await this.state.LandInstance.methods.isAdmin(currentAddress).call();
+            var verified = await this.state.RfpInstance.methods.isAdmin(currentAddress).call();
             //console.log(verified);
             this.setState({ verified: verified });
             
-            var count = await this.state.LandInstance.methods.getRfpCount().call();
+            var count = await this.state.RfpInstance.methods.getRfpCount().call();
             count = parseInt(count);
             var rowsArea = [];
             var rowsCity = [];
@@ -114,16 +114,16 @@ class TransactionInfo extends Component {
 
 
             for (var i = 1; i < count + 1; i++) {
-                rowsArea.push(<ContractData contract="Land" method="getArea" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
-                rowsCity.push(<ContractData contract="Land" method="getCity" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
-                rowsState.push(<ContractData contract="Land" method="getState" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
-                rowsPrice.push(<ContractData contract="Land" method="getPrice" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
-                rowsPID.push(<ContractData contract="Land" method="getPID" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
-                rowsSurvey.push(<ContractData contract="Land" method="getSurveyNumber" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
+                rowsArea.push(<ContractData contract="Rfp" method="getArea" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
+                rowsCity.push(<ContractData contract="Rfp" method="getCity" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
+                rowsState.push(<ContractData contract="Rfp" method="getState" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
+                rowsPrice.push(<ContractData contract="Rfp" method="getPrice" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
+                rowsPID.push(<ContractData contract="Rfp" method="getPID" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
+                rowsSurvey.push(<ContractData contract="Rfp" method="getSurveyNumber" methodArgs={[i, { from: "0xa42A8B478E5e010609725C2d5A8fe6c0C4A939cB" }]} />);
               }
             for (var i = 0; i < count; i++) {
-                var request = await this.state.LandInstance.methods.getBidDetails(i+1).call();
-                var approved = await this.state.LandInstance.methods.isApproved(i+1).call();
+                var request = await this.state.RfpInstance.methods.getBidDetails(i+1).call();
+                var approved = await this.state.RfpInstance.methods.isApproved(i+1).call();
                 // console.log(approved);
                 // console.log(request[3]);
                 var disabled = request[3]&&completed;
@@ -131,8 +131,8 @@ class TransactionInfo extends Component {
                 console.log("request[3]: ", request[3]);
                 console.log("completed: ", completed);
 
-                var owner = await this.state.LandInstance.methods.getLandOwner(i+1).call();
-                landTable.push(<tr><td>{i+1}</td><td>{owner}</td><td>{rowsArea[i]}</td><td>{rowsCity[i]}</td><td>{rowsState[i]}</td><td>{rowsPrice[i]}</td><td>{rowsSurvey[i]}</td>
+                var owner = await this.state.RfpInstance.methods.getRfpOwner(i+1).call();
+                rfpTable.push(<tr><td>{i+1}</td><td>{owner}</td><td>{rowsArea[i]}</td><td>{rowsCity[i]}</td><td>{rowsState[i]}</td><td>{rowsPrice[i]}</td><td>{rowsSurvey[i]}</td>
                 </tr>)
 
 
@@ -209,7 +209,7 @@ class TransactionInfo extends Component {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {landTable}
+                                                {rfpTable}
                                             </tbody>
                                         </Table>
                                     </CardBody>

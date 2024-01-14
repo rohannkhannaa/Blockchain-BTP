@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Land from "../artifacts/Land.json"
+import Rfp from "../artifacts/Rfp.json"
 import getWeb3 from "../getWeb3"
 import '../index.css';
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
@@ -36,7 +36,7 @@ import {
 } from 'drizzle-react-components'
 
 const drizzleOptions = {
-    contracts: [Land]
+    contracts: [Rfp]
 }
 
 var requestTable = [];
@@ -46,16 +46,16 @@ class ApproveRequest extends Component {
         super(props)
 
         this.state = {
-            LandInstance: undefined,
+            RfpInstance: undefined,
             account: null,
             web3: null,
             approved: '',
             verified: '',
         }
     }
-    landTransfer = (rfpssId, newOwner) => async () => {
+    rfpTransfer = (rfpssId, newOwner) => async () => {
 
-        await this.state.LandInstance.methods.RfpOwnershipTransfer(
+        await this.state.RfpInstance.methods.RfpOwnershipTransfer(
             rfpssId, newOwner
         ).send({
             from: this.state.account,
@@ -86,36 +86,36 @@ class ApproveRequest extends Component {
             const accounts = await web3.eth.getAccounts();
 
             const networkId = await web3.eth.net.getId();
-            const deployedNetwork = Land.networks[networkId];
+            const deployedNetwork = Rfp.networks[networkId];
             const instance = new web3.eth.Contract(
-                Land.abi,
+                Rfp.abi,
                 deployedNetwork && deployedNetwork.address,
             );
 
-            this.setState({ LandInstance: instance, web3: web3, account: accounts[0] });
+            this.setState({ RfpInstance: instance, web3: web3, account: accounts[0] });
             
             const currentAddress = await web3.currentProvider.selectedAddress;
             console.log(currentAddress);
             
-            var requestsCount = await this.state.LandInstance.methods.getBidCount().call();
+            var requestsCount = await this.state.RfpInstance.methods.getBidCount().call();
             console.log(requestsCount);
-            var verified = await this.state.LandInstance.methods.isAdmin(currentAddress).call();
+            var verified = await this.state.RfpInstance.methods.isAdmin(currentAddress).call();
             //console.log(verified);
             this.setState({ verified: verified });
             // var requestsMap = [];
-            // requestsMap = await this.state.LandInstance.methods.getAllRequests().call();
+            // requestsMap = await this.state.RfpInstance.methods.getAllRequests().call();
 
             for(let i = 1; i<requestsCount+1; i++){
-                var request = await this.state.LandInstance.methods.getBidDetails(i).call();
+                var request = await this.state.RfpInstance.methods.getBidDetails(i).call();
                 console.log(request);
                 // console.log(request[0].toLowerCase());
                 // console.log(currentAddress);
-                var isPaid = await this.state.LandInstance.methods.isPaid(request[2]).call();
+                var isPaid = await this.state.RfpInstance.methods.isPaid(request[2]).call();
                 console.log(isPaid);
                 requestTable.push(<tr><td>{i}</td><td>{request[0]}</td><td>{request[1]}</td><td>{request[2]}</td><td>{request[3].toString()}</td>
                 <td>
-                    <Button onClick={this.landTransfer(i, request[1])} disabled={!isPaid} className="button-vote">
-                        Approve Land Transfer
+                    <Button onClick={this.rfpTransfer(i, request[1])} disabled={!isPaid} className="button-vote">
+                        Approve Rfp Transfer
                 </Button>
                 </td></tr>)
                 // console.log(request[1]);
@@ -163,16 +163,16 @@ class ApproveRequest extends Component {
             <LoadingContainer>
             <Card>
                     <CardHeader>
-                      <CardTitle tag="h4">Lands Tranfer Request Info</CardTitle>
+                      <CardTitle tag="h4">RFPs Tranfer Request Info</CardTitle>
                     </CardHeader>
                     <CardBody>
                     <Table className="tablesorter" responsive color="black">
                         <thead className="text-primary">
                             <tr>
                                 <th>#</th>
-                                <th>Seller ID</th>
-                                <th>Buyer ID</th>
-                                <th>Land ID</th>
+                                <th>Shq ID</th>
+                                <th>Agency ID</th>
+                                <th>Rfp ID</th>
                                 <th>Request Status</th>
                                 <th>Verify Transfer</th>
 

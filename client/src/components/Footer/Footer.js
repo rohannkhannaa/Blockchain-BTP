@@ -28,7 +28,7 @@ function Footer() {
         {/* <Nav>
           <NavItem>
             <NavLink href="https://www.creative-tim.com/?ref=bdr-user-archive-footer">
-              Land Registry
+              Rfp Registry
             </NavLink>
           </NavItem>
           <NavItem>

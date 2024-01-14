@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import LandContract from "./artifacts/Land.json"
+import RfpContract from "./artifacts/Rfp.json"
 import getWeb3 from "./getWeb3"
 import ipfs from './ipfs';
 
@@ -7,12 +7,12 @@ import { FormGroup, FormControl, Button, Spinner, FormFile } from 'react-bootstr
 
 //import Navigation from './Navigation'
 
-class RegisterSeller extends Component {
+class RegisterShq extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            LandInstance: undefined,
+            RfpInstance: undefined,
             account: null,
             web3: null,
             name: '',
@@ -42,13 +42,13 @@ class RegisterSeller extends Component {
             const accounts = await web3.eth.getAccounts();
 
             const networkId = await web3.eth.net.getId();
-            const deployedNetwork = LandContract.networks[networkId];
+            const deployedNetwork = RfpContract.networks[networkId];
             const instance = new web3.eth.Contract(
-                LandContract.abi,
+                RfpContract.abi,
                 deployedNetwork && deployedNetwork.address,
             );
 
-            this.setState({ LandInstance: instance, web3: web3, account: accounts[0] });
+            this.setState({ RfpInstance: instance, web3: web3, account: accounts[0] });
 
 
         } catch (error) {
@@ -87,7 +87,7 @@ class RegisterSeller extends Component {
         // } else if (!Number(this.state.age) || this.state.age < 21) {
         //     alert("Your age must be a number");
         // } else {
-            await this.state.LandInstance.methods.registerShq(
+            await this.state.RfpInstance.methods.registerShq(
                 this.state.name,
                 this.state.age,
                 this.state.aadharNumber,
@@ -98,7 +98,7 @@ class RegisterSeller extends Component {
                     from: this.state.account,
                     gas: 2100000
                 }).then(response => {
-                    this.props.history.push("/Seller/SellerDashboard");
+                    this.props.history.push("/Shq/ShqDashboard");
                 });
 
             //Reload
@@ -118,7 +118,7 @@ class RegisterSeller extends Component {
     updatePan = event => (
         this.setState({ panNumber: event.target.value })
     )
-    updateOwnedLands = event => (
+    updateOwnedRfps = event => (
         this.setState({ rfpssOwned: event.target.value })
     )
     captureDoc(event) {
@@ -140,7 +140,7 @@ class RegisterSeller extends Component {
                     {/* <div className="img-wrapper">
                         <img src="https://i.pinimg.com/originals/71/6e/00/716e00537e8526347390d64ec900107d.png" className="logo" />
                         <div className="wine-text-container">
-                            <div className="site-title wood-text">Land Registry</div>
+                            <div className="site-title wood-text">Rfp Registry</div>
                         </div>
                     </div> */}
                     <div className="auth-wrapper">
@@ -237,13 +237,13 @@ class RegisterSeller extends Component {
 
                                 {/* <FormGroup>
                                     <div className="form-label">
-                                        Enter Owned Lands --
+                                        Enter Owned Rfps --
                       </div>
                                     <div className="form-input">
                                         <FormControl
                                             input='text'
                                             value={this.state.rfpssOwned}
-                                            onChange={this.updateOwnedLands}
+                                            onChange={this.updateOwnedRfps}
                                         />
                                     </div>
                                 </FormGroup> */}
@@ -264,4 +264,4 @@ class RegisterSeller extends Component {
     }
 }
 
-export default RegisterSeller;
+export default RegisterShq;
